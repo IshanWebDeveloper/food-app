@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.aks.appwrnlibapp'
+    namespace 'com.ishan.foodapp'
     defaultConfig {
-        applicationId 'com.aks.appwrnlibapp'
+        applicationId 'com.ishan.foodapp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

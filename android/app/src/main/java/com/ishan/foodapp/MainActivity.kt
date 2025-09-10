@@ -1,4 +1,4 @@
-package com.aks.appwrnlibapp
+package com.ishan.foodapp
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

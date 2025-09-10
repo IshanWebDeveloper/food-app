@@ -25,8 +25,8 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
-        <data android:scheme="com.aks.appwrnlibapp"/>
-        <data android:scheme="exp+firebase-rn-lib-app"/>
+        <data android:scheme="com.ishan.foodapp"/>
+        <data android:scheme="exp+food-app"/>
       </intent-filter>
     </activity>
   </application>

@@ -1,4 +1,4 @@
-package com.aks.appwrnlibapp
+package com.ishan.foodapp
 
 import android.app.Application
 import android.content.res.Configuration
