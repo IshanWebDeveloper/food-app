@@ -1,6 +1,7 @@
 import { SessionProvider } from "@/context";
 import { Slot } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
 // Import your global CSS file
 import "../global.css";
 
@@ -17,21 +18,23 @@ import "../global.css";
 export default function Root() {
   // Set up the auth context and render our layout inside of it.
   return (
-    <SessionProvider>
-      {/* 
+    <ReactQueryProvider>
+      <SessionProvider>
+        {/* 
         GestureHandlerRootView is required for:
         - Drawer navigation gestures
         - Swipe gestures
         - Other gesture-based interactions
         Must wrap the entire app to function properly
       */}
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        {/* 
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          {/* 
           Slot renders child routes dynamically
           This includes both (app) and (auth) group routes
         */}
-        <Slot />
-      </GestureHandlerRootView>
-    </SessionProvider>
+          <Slot />
+        </GestureHandlerRootView>
+      </SessionProvider>
+    </ReactQueryProvider>
   );
 }

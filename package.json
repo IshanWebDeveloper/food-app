@@ -1,5 +1,5 @@
 {
-  "name": "firebase-rn-lib-app",
+  "name": "foodapp",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@tanstack/eslint-plugin-query": "^5.86.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.12",
     "@types/react-test-renderer": "^18.0.7",

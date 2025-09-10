@@ -12,7 +12,7 @@ import {
   removeTokens,
   updateAccessToken,
 } from "./tokenStorage";
-import { API_ENDPOINTS } from "./api-endpoints";
+import { ENDPOINTS } from "../api/api-endpoints";
 import { CommonResponseDataType } from "@/types/common";
 
 // --------------------------------------------------
@@ -87,7 +87,7 @@ api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
 const refreshAccessToken = async (): Promise<string> => {
   const refreshToken = await getRefreshToken();
   if (!refreshToken) throw new Error("Missing refresh token");
-  const response = await axios.post(API_ENDPOINTS.auth.REFRESH_TOKEN, {
+  const response = await axios.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {
     refreshToken,
   });
   const newAccessToken = (response.data as { accessToken?: string })
