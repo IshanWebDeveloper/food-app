@@ -8,6 +8,7 @@ import { useEffect } from "react";
 // Import your global CSS file
 import "../global.css";
 import { StatusBar } from "expo-status-bar";
+import { Lobster_400Regular } from "@expo-google-fonts/lobster/400Regular";
 /**
  * Root Layout is the highest-level layout in the app, wrapping all other layouts and screens.
  * It provides:
@@ -21,6 +22,7 @@ import { StatusBar } from "expo-status-bar";
 export default function Root() {
   // Set up the auth context and render our layout inside of it.
   const [loaded] = useFonts({
+    Lobster_400Regular,
     "Jakarta-Bold": require("../assets/fonts/PlusJakartaSans-Bold.ttf"),
     "Jakarta-ExtraBold": require("../assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
     "Jakarta-ExtraLight": require("../assets/fonts/PlusJakartaSans-ExtraLight.ttf"),

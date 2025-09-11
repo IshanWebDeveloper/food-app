@@ -1,12 +1,11 @@
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 const Layout = () => {
   return (
     <Stack
       screenOptions={{
-        statusBarTranslucent: true,
         headerShown: false,
-        animation: "slide_from_right",
+        statusBarStyle: "dark",
+        animation: "none",
       }}
     >
       <Stack.Screen name="welcome" options={{ headerShown: false }} />

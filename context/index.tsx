@@ -17,8 +17,8 @@ export interface Session {
 interface SessionContextProps {
   session: Session;
   setSession: React.Dispatch<React.SetStateAction<Session>>;
-  handleSignIn: (data: SignInRequest) => void;
-  handleSignOut: (data: SignOutRequest) => void;
+  handleSignIn: (data: SignInRequest) => Promise<void>;
+  handleSignOut: (data: SignOutRequest) => Promise<void>;
 }
 
 const defaultSession: Session = {
