@@ -2,13 +2,13 @@ import { ENDPOINTS } from "@/api/api-endpoints";
 import api from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
 
-interface signOutRequest {
+export interface SignOutRequest {
   refreshToken: string;
 }
 
 export function useUserSignOut() {
   const signOutMutation = useMutation({
-    mutationFn: async (data: signOutRequest) => {
+    mutationFn: async (data: SignOutRequest) => {
       return await api.post(ENDPOINTS.AUTH.SIGNOUT, data);
     },
   });
