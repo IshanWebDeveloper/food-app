@@ -25,8 +25,4 @@ declare interface User {
   email: string;
   name: string;
   username: string;
-  password: string;
-  refresh_token: string;
-  created_at: string;
-  updated_at: string;
 }

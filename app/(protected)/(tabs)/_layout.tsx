@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { Image, ImageSourcePropType, View } from "react-native";
-
+import AntDesign from "@expo/vector-icons/AntDesign";
 const TabIcon = ({
   source,
   focused,
@@ -37,7 +37,6 @@ export default function Layout() {
         tabBarInactiveTintColor: "white",
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: "#333333",
           borderRadius: 50,
           paddingBottom: 0, // ios only
           overflow: "hidden",
@@ -68,6 +67,19 @@ export default function Layout() {
         options={{
           title: "Home",
           headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <AntDesign name="home" size={24} color="black" focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <AntDesign name="user" size={24} color="black" focused={focused} />
+          ),
         }}
       />
     </Tabs>

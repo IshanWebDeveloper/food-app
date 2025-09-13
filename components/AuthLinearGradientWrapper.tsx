@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
 interface AuthGradientWrapperProps {
   children: ReactNode;
 }
@@ -11,7 +12,7 @@ const AuthLinearGradientWrapper = ({ children }: AuthGradientWrapperProps) => {
       end={{ x: 0.5, y: 1 }}
       className="flex-1 rounded-[35px] p-4 "
     >
-      {children}
+      <SafeAreaView className="flex-1">{children}</SafeAreaView>
     </LinearGradient>
   );
 };

@@ -13,7 +13,7 @@ module.exports = {
         JakartaExtraBold: ["Jakarta-ExtraBold", "sans-serif"],
         JakartaExtraLight: ["Jakarta-ExtraLight", "sans-serif"],
         JakartaLight: ["Jakarta-Light", "sans-serif"],
-        LobsterRegular: ["Lobster_400Regular", "cursive"],
+        LobsterRegular: ["Lobster-Regular", "cursive"],
       },
     },
   },

@@ -24,6 +24,9 @@ export function useUserSignIn() {
         data
       );
     },
+    onError: (error: any) => {
+      console.error("Sign-in error:", error);
+    },
   });
 
   return {

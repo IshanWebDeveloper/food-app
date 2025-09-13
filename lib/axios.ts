@@ -6,14 +6,11 @@ import axios, {
   AxiosRequestConfig,
   InternalAxiosRequestConfig,
 } from "axios";
-import {
-  getAccessToken,
-  getRefreshToken,
-  removeTokens,
-  updateAccessToken,
-} from "./tokenStorage";
+
 import { ENDPOINTS } from "../api/api-endpoints";
-import { CommonResponseDataType } from "@/types/common";
+import { AuthTokenType, CommonResponseDataType } from "@/types/common";
+import { storage } from "./storage";
+import { getAuthToken, removeAuthToken, saveAuthToken } from "./authToken";
 
 // --------------------------------------------------
 // Types & augmentation
@@ -43,7 +40,7 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
   // withCredentials is generally not used in React Native (no browser cookies)
-  timeout: 30_000,
+  timeout: 30000,
 });
 
 // --------------------------------------------------
@@ -73,7 +70,7 @@ export const setUnauthorizedHandler = (fn: () => void | Promise<void>) => {
 // --------------------------------------------------
 api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
   try {
-    const token = await getAccessToken();
+    const token = await getAuthToken(AuthTokenType.ACCESS_TOKEN);
     if (token) config.headers.Authorization = `Bearer ${token}`;
   } catch {
     // silently ignore token retrieval problems
@@ -85,7 +82,7 @@ api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
 // Helper: perform refresh
 // --------------------------------------------------
 const refreshAccessToken = async (): Promise<string> => {
-  const refreshToken = await getRefreshToken();
+  const refreshToken = await getAuthToken(AuthTokenType.REFRESH_TOKEN);
   if (!refreshToken) throw new Error("Missing refresh token");
   const response = await axios.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {
     refreshToken,
@@ -93,7 +90,7 @@ const refreshAccessToken = async (): Promise<string> => {
   const newAccessToken = (response.data as { accessToken?: string })
     .accessToken;
   if (!newAccessToken) throw new Error("No access token in refresh response");
-  await updateAccessToken(newAccessToken);
+  await saveAuthToken(AuthTokenType.ACCESS_TOKEN, newAccessToken);
   api.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
   return newAccessToken;
 };
@@ -115,6 +112,14 @@ api.interceptors.response.use(
       );
     }
 
+    // If request is to sign-in or sign-up, skip refresh logic
+    const url = originalRequest?.url || "";
+    if (url.includes("/signin") || url.includes("/signup")) {
+      return Promise.reject(
+        (error.response.data as CommonResponseDataType<unknown>) ?? error
+      );
+    }
+
     // Non-auth errors: just propagate the server payload
     if (error.response.status !== 401 || !originalRequest) {
       return Promise.reject(
@@ -125,7 +130,8 @@ api.interceptors.response.use(
     // 401 handling with refresh logic
     if (originalRequest._retry) {
       // Already retried once - enforce logout
-      await removeTokens();
+      await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
+      await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
       if (unauthorizedHandler) await unauthorizedHandler();
       return Promise.reject(
         (error.response.data as CommonResponseDataType<unknown>) ?? error
@@ -158,7 +164,8 @@ api.interceptors.response.use(
       return api(originalRequest as AxiosRequestConfig);
     } catch (refreshErr) {
       processQueue(refreshErr, null);
-      await removeTokens();
+      await storage.removeItem("accessToken");
+      await storage.removeItem("refreshToken");
       if (unauthorizedHandler) await unauthorizedHandler();
       return Promise.reject(refreshErr);
     } finally {

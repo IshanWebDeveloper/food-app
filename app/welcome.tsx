@@ -7,6 +7,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import AppLogoName from "@/components/AppLogoName";
 const Home = () => {
   const router = useRouter();
+
   return (
     <SafeAreaView className="flex h-full items-center justify-between bg-green">
       <LinearGradient
@@ -21,7 +22,7 @@ const Home = () => {
 
           <CustomButton
             title="Get Started"
-            onPress={() => router.push("/(auth)/sign-in")}
+            onPress={() => router.push("/sign-in")}
             IconRight={() => (
               <Ionicons name="arrow-forward" size={20} color="white" />
             )}

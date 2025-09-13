@@ -3,7 +3,7 @@ import api from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
 
 export interface SignOutRequest {
-  refreshToken: string;
+  userId: string;
 }
 
 export function useUserSignOut() {
@@ -15,6 +15,8 @@ export function useUserSignOut() {
 
   return {
     signOut: signOutMutation.mutateAsync,
+    isPending: signOutMutation.isPending,
+    isSuccess: signOutMutation.isSuccess,
     isError: signOutMutation.isError,
     error: signOutMutation.error,
   };

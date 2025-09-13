@@ -1,13 +1,24 @@
-import { useSession } from "@/context";
+import { AuthContext } from "@/context/authContext";
+import { useAuthStore } from "@/hooks/useAuthStore";
 import { Redirect } from "expo-router";
+import { useContext, useEffect } from "react";
 
-const Page = () => {
-  const { session } = useSession();
+const index = () => {
+  // get auth from storage
+  const { isLoggedIn, authState, isReady } = useAuthStore();
+  console.log(
+    "authState in index.tsx:",
+    authState,
+    isLoggedIn,
+    "isReady:",
+    isReady
+  );
 
-  if (session.isAuthenticated)
+  if (isLoggedIn && isReady) {
     return <Redirect href="/(protected)/(tabs)/home" />;
+  }
 
-  return <Redirect href="/(auth)/welcome" />;
+  return <Redirect href="/welcome" />;
 };
 
-export default Page;
+export default index;

@@ -14,10 +14,11 @@ const AppLogoName: React.FC<AppLogoNameProps> = ({
 }) => {
   return (
     <View
-      className={`flex h-fit w-fit p-2 items-center justify-center ${viewStyle}`}
+      className={` h-fit w-fit p-2 items-center justify-center ${viewStyle}`}
     >
       <Text
-        className={`mb-2   text-6xl text-white font-LobsterRegular ${textStyle}`}
+        className={`mb-2 text-6xl text-white ${textStyle}`}
+        style={{ fontFamily: "Lobster-Regular" }}
       >
         FoodGo
       </Text>

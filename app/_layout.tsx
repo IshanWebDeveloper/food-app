@@ -1,4 +1,4 @@
-import { SessionProvider } from "@/context";
+import { AuthProvider } from "@/context/authContext";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -8,7 +8,6 @@ import { useEffect } from "react";
 // Import your global CSS file
 import "../global.css";
 import { StatusBar } from "expo-status-bar";
-import { Lobster_400Regular } from "@expo-google-fonts/lobster/400Regular";
 /**
  * Root Layout is the highest-level layout in the app, wrapping all other layouts and screens.
  * It provides:
@@ -19,10 +18,13 @@ import { Lobster_400Regular } from "@expo-google-fonts/lobster/400Regular";
  * This layout affects every screen in the app, including both authenticated
  * and unauthenticated routes.
  */
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
 export default function Root() {
   // Set up the auth context and render our layout inside of it.
+
   const [loaded] = useFonts({
-    Lobster_400Regular,
+    "Lobster-Regular": require("../assets/fonts/Lobster-Regular.ttf"),
     "Jakarta-Bold": require("../assets/fonts/PlusJakartaSans-Bold.ttf"),
     "Jakarta-ExtraBold": require("../assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
     "Jakarta-ExtraLight": require("../assets/fonts/PlusJakartaSans-ExtraLight.ttf"),
@@ -42,7 +44,7 @@ export default function Root() {
   }
   return (
     <ReactQueryProvider>
-      <SessionProvider>
+      <AuthProvider>
         {/* 
         GestureHandlerRootView is required for:
         - Drawer navigation gestures
@@ -57,18 +59,21 @@ export default function Root() {
         */}
           <StatusBar style="dark" translucent />
           <Stack
+            initialRouteName="welcome"
             screenOptions={{
               headerShown: false,
               animation: "none",
             }}
           >
             <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             <Stack.Screen name="(protected)" options={{ headerShown: false }} />
+            <Stack.Screen name="welcome" options={{ headerShown: false }} />
+            <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+            <Stack.Screen name="sign-in" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
           </Stack>
         </GestureHandlerRootView>
-      </SessionProvider>
+      </AuthProvider>
     </ReactQueryProvider>
   );
 }
