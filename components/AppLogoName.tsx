@@ -18,7 +18,7 @@ const AppLogoName: React.FC<AppLogoNameProps> = ({
     >
       <Text
         className={`mb-2 text-6xl text-white ${textStyle}`}
-        style={{ fontFamily: "Lobster-Regular" }}
+        style={{ fontFamily: "LobsterRegular" }}
       >
         FoodGo
       </Text>

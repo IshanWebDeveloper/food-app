@@ -10,9 +10,8 @@ const Home = () => {
   const { handleSignOut: signOut } = useContext(AuthContext);
   const { authState } = useAuthStore();
   const router = useRouter();
-  console.log("Auth state in home.tsx:", authState);
   const handleSignOut = async () => {
-    await signOut({ userId: authState.user?.id! });
+    await signOut();
     router.replace("/welcome");
   };
   return (
@@ -20,7 +19,7 @@ const Home = () => {
       <View className="flex-1 p-5">
         <View className="mb-5 flex-row items-center justify-between">
           <Text className="font-JakartaBold text-2xl text-white">
-            Hello, Ishan
+            Hello, {authState.user?.name}
           </Text>
           <CustomButton title="Sign Out" onPress={() => handleSignOut()} />
         </View>

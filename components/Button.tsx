@@ -7,7 +7,11 @@ type Props = React.ComponentProps<typeof PaperButton>;
 
 const Button = ({ mode = "elevated", style, children, ...props }: Props) => (
   <PaperButton
-    style={[styles.button, { backgroundColor: Colors.light.button }, style]}
+    style={[
+      styles.button,
+      { backgroundColor: Colors.light.buttonPrimary },
+      style,
+    ]}
     contentStyle={{ height: 60 }}
     labelStyle={[styles.text, props.labelStyle]}
     mode={mode}
@@ -26,8 +30,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   text: {
-    fontFamily: "Poppins-Medium",
-    fontSize: 16,
+    fontFamily: "JakartaBold",
+    fontSize: 18,
     lineHeight: 26,
     color: "white",
   },

@@ -25,4 +25,6 @@ declare interface User {
   email: string;
   name: string;
   username: string;
+  deliveryAddress?: string;
+  phoneNumber?: string;
 }

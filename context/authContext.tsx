@@ -14,7 +14,7 @@ type AuthState = {
   isSigningIn: boolean;
   isSigningOut: boolean;
   handleSignIn: (data: SignInRequest) => Promise<void>;
-  handleSignOut: (data: SignOutRequest) => Promise<void>;
+  handleSignOut: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthState>({
@@ -23,13 +23,13 @@ export const AuthContext = createContext<AuthState>({
   isSigningIn: false,
   isSigningOut: false,
   handleSignIn: async (data: SignInRequest) => {},
-  handleSignOut: async (data: SignOutRequest) => {},
+  handleSignOut: async () => {},
 });
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const { signIn, isPending: isSigningIn } = useUserSignIn();
   const { signOut, isPending: isSigningOut } = useUserSignOut();
-  const { setAuthState, reset, isReady, setIsLoggedIn, isLoggedIn } =
+  const { authState, setAuthState, reset, isReady, setIsLoggedIn, isLoggedIn } =
     useAuthStore();
 
   const router = useRouter();
@@ -57,13 +57,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   };
 
-  const handleSignOut = async (data: SignOutRequest) => {
+  const handleSignOut = async () => {
     try {
-      await signOut(data);
+      await signOut({ userId: authState.user?.id! });
       setIsLoggedIn(false);
       await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
       reset();
+      router.replace("/welcome");
     } catch (error) {
       console.error("Error signing out:", error);
     }

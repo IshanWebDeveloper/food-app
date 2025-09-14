@@ -40,9 +40,10 @@ const TextInput = forwardRef<TextInputRefType, Props>(
     <View style={[styles.container, customViewStyle]}>
       {labelText && (
         <Text
-          className="font-JakartaExtraBold text-lg"
+          className="text-lg"
           style={[
             {
+              fontFamily: "JakartaExtraBold",
               color: textColor ? textColor : Colors.light.label,
             },
             customLabelTextStyle,
@@ -67,7 +68,7 @@ const TextInput = forwardRef<TextInputRefType, Props>(
         outlineStyle={[
           {
             borderRadius: 20,
-            borderColor: Colors.light.borderColor,
+            borderColor: Colors.light.borderColor2,
             // elevation: 5,
           },
           outlineStyle,

@@ -22,6 +22,21 @@ import { StatusBar } from "expo-status-bar";
 SplashScreen.preventAutoHideAsync();
 export default function Root() {
   // Set up the auth context and render our layout inside of it.
+  const [loaded, error] = useFonts({
+    JakartaRegular: require("../assets/fonts/PlusJakartaSans-Regular.ttf"),
+    JakartaSemiBold: require("../assets/fonts/PlusJakartaSans-SemiBold.ttf"),
+    JakartaBold: require("../assets/fonts/PlusJakartaSans-Bold.ttf"),
+    JakartaMedium: require("../assets/fonts/PlusJakartaSans-Medium.ttf"),
+    JakartaExtraBold: require("../assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
+    JakartaExtraLight: require("../assets/fonts/PlusJakartaSans-ExtraLight.ttf"),
+    JakartaLight: require("../assets/fonts/PlusJakartaSans-Light.ttf"),
+    LobsterRegular: require("../assets/fonts/Lobster-Regular.ttf"),
+  });
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
 
   return (
     <ReactQueryProvider>

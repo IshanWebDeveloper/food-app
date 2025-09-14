@@ -3,14 +3,7 @@ import { Redirect } from "expo-router";
 
 const index = () => {
   // get auth from storage
-  const { isLoggedIn, authState, isReady } = useAuthStore();
-  console.log(
-    "authState in index.tsx:",
-    authState,
-    isLoggedIn,
-    "isReady:",
-    isReady
-  );
+  const { isLoggedIn, isReady } = useAuthStore();
 
   if (isLoggedIn && isReady) {
     return <Redirect href="/(protected)/(tabs)/home" />;

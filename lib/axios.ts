@@ -114,7 +114,11 @@ api.interceptors.response.use(
 
     // If request is to sign-in or sign-up, skip refresh logic
     const url = originalRequest?.url || "";
-    if (url.includes("/signin") || url.includes("/signup")) {
+    if (
+      url.includes("/signin") ||
+      url.includes("/signup") ||
+      url.includes("/signout")
+    ) {
       return Promise.reject(
         (error.response.data as CommonResponseDataType<unknown>) ?? error
       );
