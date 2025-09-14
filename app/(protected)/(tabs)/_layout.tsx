@@ -1,6 +1,13 @@
 import { Tabs } from "expo-router";
-import { Image, ImageSourcePropType, View } from "react-native";
+import {
+  Image,
+  ImageSourcePropType,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useRouteInfo, useRouter } from "expo-router/build/hooks";
+import BackButton from "@/components/BackButton";
 const TabIcon = ({
   source,
   focused,
@@ -33,6 +40,13 @@ export default function Layout() {
     <Tabs
       initialRouteName="home"
       screenOptions={{
+        headerTransparent: true,
+        headerTitle: "",
+        headerShown: true,
+        headerLeft: () => <BackButton />,
+        headerRight: () => (
+          <AntDesign name="setting" size={24} color="white" className="mr-4" />
+        ),
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: "white",
         tabBarShowLabel: false,
@@ -67,6 +81,7 @@ export default function Layout() {
         options={{
           title: "Home",
           headerShown: false,
+
           tabBarIcon: ({ focused }) => (
             <AntDesign name="home" size={24} color="black" focused={focused} />
           ),
@@ -76,10 +91,11 @@ export default function Layout() {
         name="profile"
         options={{
           title: "Profile",
-          headerShown: false,
+          headerShown: true,
           tabBarIcon: ({ focused }) => (
             <AntDesign name="user" size={24} color="black" focused={focused} />
           ),
+          tabBarStyle: { display: "none" },
         }}
       />
     </Tabs>

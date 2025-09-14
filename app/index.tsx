@@ -1,7 +1,5 @@
-import { AuthContext } from "@/context/authContext";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { Redirect } from "expo-router";
-import { useContext, useEffect } from "react";
 
 const index = () => {
   // get auth from storage

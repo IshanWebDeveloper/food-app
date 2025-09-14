@@ -28,7 +28,23 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-font", "expo-secure-store"],
+    "plugins": [
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "Lobster": "./assets/fonts/Lobster-Regular.ttf",
+          "Jakarta-Bold": "./assets/fonts/PlusJakartaSans-Bold.ttf",
+          "Jakarta-ExtraBold": "./assets/fonts/PlusJakartaSans-ExtraBold.ttf",
+          "Jakarta-ExtraLight": "./assets/fonts/PlusJakartaSans-ExtraLight.ttf",
+          "Jakarta-Light": "./assets/fonts/PlusJakartaSans-Light.ttf",
+          "Jakarta-Medium": "./assets/fonts/PlusJakartaSans-Medium.ttf",
+          "Jakarta-Regular": "./assets/fonts/PlusJakartaSans-Regular.ttf",
+          "Jakarta-SemiBold": "./assets/fonts/PlusJakartaSans-SemiBold.ttf"
+        }
+      ],
+      "expo-secure-store"
+    ],
     "experiments": {
       "typedRoutes": true
     }
