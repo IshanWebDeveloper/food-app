@@ -1,6 +1,6 @@
 # Food App
 
-A modern React Native food ordering app built with Expo, TypeScript, React Query, and NativeWind.  
+A modern React Native food ordering app built with Expo, TypeScript, React Query, and NativeWind.
 Supports authentication, browsing foods, favorites, order flow, and payment.
 
 ---
@@ -53,6 +53,8 @@ Supports authentication, browsing foods, favorites, order flow, and payment.
    yarn install
    # or
    npm install
+   # or
+   npx expo install
    ```
 
 3. **Set up environment variables:**
@@ -66,8 +68,21 @@ Supports authentication, browsing foods, favorites, order flow, and payment.
    ```
 
 4. **Start the Expo app:**
+
    ```sh
    npx expo start
+   ```
+
+5. **Create a development build:**
+
+   ```sh
+   npx expo prebuild
+   ```
+
+   Then run on your device/emulator:
+
+   ```sh
+   npx expo run:android
    ```
 
 ---
@@ -113,7 +128,6 @@ Supports authentication, browsing foods, favorites, order flow, and payment.
 - `yarn start` / `npm start` — Start Expo dev server
 - `yarn android` / `npm run android` — Run on Android
 - `yarn ios` / `npm run ios` — Run on iOS
-- `yarn web` / `npm run web` — Run on web
 
 ---
 
