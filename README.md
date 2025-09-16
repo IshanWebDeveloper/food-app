@@ -43,7 +43,7 @@ Supports authentication, browsing foods, favorites, order flow, and payment.
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/your-username/food-app.git
+   git clone https://github.com/IshanWebDeveloper/food-app.git
    cd food-app
    ```
 
