@@ -25,7 +25,7 @@ export function useUserSignIn() {
     },
     onError: (error: any) => {
       console.error("Sign-in error:", error);
-    },
+    }
   });
 
   return {
@@ -33,6 +33,6 @@ export function useUserSignIn() {
     isPending: signInMutation.isPending,
     isLoaded: signInMutation.isSuccess,
     isError: signInMutation.isError,
-    error: signInMutation.error,
+    error: signInMutation.error
   };
 }

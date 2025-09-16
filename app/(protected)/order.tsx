@@ -4,6 +4,7 @@ import CreditCardDetailCard, {
 import { useState } from "react";
 import { SafeAreaView, Text, View } from "react-native";
 import Button from "@/components/Button";
+import { router } from "expo-router";
 const TAX_RATE = parseFloat(process.env.EXPO_PUBLIC_TAX_RATE || "0.07");
 const DELIVERY_FEE = parseFloat(process.env.EXPO_PUBLIC_DELIVERY_FEE || "5.00");
 const Order = () => {
@@ -87,7 +88,9 @@ const Order = () => {
             <Button
               className="flex-1 "
               style={{ backgroundColor: "black" }}
-              onPress={() => {}}
+              onPress={() => {
+                router.push("/(protected)/payment-success-modal");
+              }}
             >
               <Text className="text-white text-[18px] font-JakartaMedium">
                 Pay Now

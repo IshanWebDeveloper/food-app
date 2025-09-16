@@ -11,10 +11,14 @@ export function useGetAllFoods() {
       const response = await api.get<FoodItem[]>(ENDPOINTS.FOODS.GET_ALL);
       return response.data;
     },
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMount: true,
   });
 
   return {
-    foods: getAllFoodsQuery.data,
+    foods: [...(getAllFoodsQuery.data || [])],
+    refetch: getAllFoodsQuery.refetch,
     isPending: getAllFoodsQuery.isLoading,
     isLoaded: getAllFoodsQuery.isSuccess,
     isError: getAllFoodsQuery.isError,

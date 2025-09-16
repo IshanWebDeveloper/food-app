@@ -1,4 +1,4 @@
-import { OrderItem, User } from "@/types/types";
+import { OrderItem } from "@/types/types";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { storage } from "@/lib/storage";
@@ -25,6 +25,7 @@ export const useOrderStore = create<OrderStore>()(
       ...InitialState,
       setIsReady: () => {
         // This function can be used to set a flag indicating the store is ready
+        console.log("Order store is ready");
       },
       addToOrder: (item: OrderItem) => {
         const existingItem = get().orderItems.find(

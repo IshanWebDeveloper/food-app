@@ -185,7 +185,7 @@ const Profile = () => {
             )}
           />
 
-          <View className="flex  w-full h-fit flex-row justify-between gap-4 mt-6 ">
+          <View className="flex  w-full h-fit flex-row justify-between gap-4  ">
             <Button
               mode="outlined"
               style={{ flex: 1, backgroundColor: Colors.light.buttonSecondary }}

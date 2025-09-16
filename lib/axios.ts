@@ -2,7 +2,7 @@
 import axios, {
   AxiosError,
   AxiosRequestConfig,
-  InternalAxiosRequestConfig,
+  InternalAxiosRequestConfig
 } from "axios";
 
 import { ENDPOINTS } from "../api/api-endpoints";
@@ -28,9 +28,9 @@ const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json",
+    "Content-Type": "application/json"
   },
-  timeout: 30000,
+  timeout: 30000
 });
 
 // authApi: used ONLY for token refresh calls (no request interceptor)
@@ -38,9 +38,9 @@ const authApi = axios.create({
   baseURL: BASE_URL,
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json",
+    "Content-Type": "application/json"
   },
-  timeout: 30000,
+  timeout: 30000
 });
 
 // refresh flow state
@@ -89,7 +89,7 @@ export const refreshAccessToken = async (): Promise<string> => {
 
   // POST to refresh endpoint using authApi so it uses baseURL and no auth header
   const response = await authApi.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {
-    refresh_token: refreshToken,
+    refresh_token: refreshToken
   });
 
   // accept multiple possible response shapes

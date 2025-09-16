@@ -1,4 +1,3 @@
-import { ENDPOINTS } from "@/api/api-endpoints";
 import AppLogoName from "@/components/AppLogoName";
 import FilterSelectItem from "@/components/FilterSelectItem";
 import FoodCard from "@/components/FoodCard";
@@ -6,10 +5,9 @@ import TextInputWithIcon from "@/components/TextInputWithIcon";
 import UserAvatar from "@/components/UserAvatar";
 import { useGetAllCategories } from "@/hooks/api/categories/useGetAllCategories";
 import { useGetAllFoods } from "@/hooks/api/food/useGetAllFood";
-import { getAuthToken, saveAuthToken } from "@/lib/authToken";
-import api from "@/lib/axios";
-import { AuthTokenType } from "@/types/common";
-import { useEffect, useState } from "react";
+import { useGetUserFavoriteFoods } from "@/hooks/api/user/useGetUserFavoriteFood";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -34,9 +32,22 @@ const filterItems = [
 
 const Home = () => {
   const { categories } = useGetAllCategories();
-  const { foods, isLoaded } = useGetAllFoods();
+  const { foods, refetch } = useGetAllFoods();
+  const { userFavoriteFoods } = useGetUserFavoriteFoods();
   const [filters, setFilters] =
     useState<{ name: string; selected: boolean }[]>(filterItems);
+
+  useFocusEffect(
+    useCallback(() => {
+      // This code runs when the screen is focused
+      refetch();
+
+      // Optional: Return a cleanup function
+      return () => {
+        refetch();
+      };
+    }, [refetch]), // Empty dependency array means it runs once on focus and cleans up on blur/unmount
+  );
 
   useEffect(() => {
     if (categories) {
@@ -83,7 +94,7 @@ const Home = () => {
                   const updatedFilters = filters.map((filter) =>
                     filter.name === filterName
                       ? { ...filter, selected: true }
-                      : { ...filter, selected: false }
+                      : { ...filter, selected: false },
                   );
                   setFilters(updatedFilters);
                 }}
@@ -101,13 +112,18 @@ const Home = () => {
 
         <View className="flex-1 mt-4">
           <FlatList
-            data={foods || []}
-            extraData={isLoaded}
+            data={foods}
+            extraData={userFavoriteFoods}
             horizontal={false}
             numColumns={2}
             columnWrapperClassName="gap-4 mb-4"
-            renderItem={({ item }) => <FoodCard data={item} />}
-            keyExtractor={(item, index) => item.toString() + index.toString()}
+            renderItem={({ item }) => (
+              <FoodCard
+                data={item}
+                userFavoriteFoods={userFavoriteFoods?.data}
+              />
+            )}
+            keyExtractor={(item) => item.id.toString()}
             ListFooterComponent={<View className="h-20" />}
             showsVerticalScrollIndicator={false}
           />

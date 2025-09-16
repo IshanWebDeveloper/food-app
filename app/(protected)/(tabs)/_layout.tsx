@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import { Image, ImageSourcePropType, View } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import BackButton from "@/components/BackButton";
-const TabIcon = ({
+export const TabIcon = ({
   source,
   focused,
 }: {
@@ -42,8 +42,8 @@ export default function Layout() {
         headerRight: () => (
           <AntDesign name="setting" size={24} color="white" className="mr-4" />
         ),
-        tabBarActiveTintColor: "white",
-        tabBarInactiveTintColor: "white",
+        tabBarActiveTintColor: "red",
+        tabBarInactiveTintColor: "black",
         tabBarShowLabel: false,
         tabBarStyle: {
           borderRadius: 50,
@@ -77,36 +77,36 @@ export default function Layout() {
           title: "Home",
           headerShown: false,
 
-          tabBarIcon: ({ focused }) => (
-            <AntDesign name="home" size={24} color="black" focused={focused} />
+          tabBarIcon: ({ focused, color }) => (
+            <AntDesign name="home" size={24} color={color} focused={focused} />
           ),
         }}
       />
-      <Tabs.Screen
-        name="cart"
-        options={{
-          title: "Cart",
-          headerShown: true,
-          tabBarIcon: ({ focused }) => (
-            <AntDesign
-              name="shoppingcart"
-              size={24}
-              color="black"
-              focused={focused}
-            />
-          ),
-          tabBarStyle: { display: "none" },
-        }}
-      />
+
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
           headerShown: true,
-          tabBarIcon: ({ focused }) => (
-            <AntDesign name="user" size={24} color="black" focused={focused} />
+          tabBarIcon: ({ focused, color }) => (
+            <AntDesign name="user" size={24} color={color} focused={focused} />
           ),
           tabBarStyle: { display: "none" },
+        }}
+      />
+      <Tabs.Screen
+        name="favorites"
+        options={{
+          title: "Favorites Food",
+          headerShown: true,
+          tabBarIcon: ({ focused, color }) => (
+            <AntDesign
+              name="heart"
+              size={24}
+              color={focused ? "red" : "black"}
+              focused={focused}
+            />
+          ),
         }}
       />
     </Tabs>

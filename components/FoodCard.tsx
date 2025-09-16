@@ -1,13 +1,39 @@
+import { useAddToFavorites } from "@/hooks/api/user/useAddToFavorites";
+import { useRemoveFromFavorites } from "@/hooks/api/user/useRemoveFavorite";
 import { FoodItem } from "@/types/types";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
+import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 interface FoodCardProps {
   data: FoodItem;
+  userFavoriteFoods?: FoodItem[];
 }
 
-const FoodCard = ({ data }: FoodCardProps) => {
+const FoodCard = ({ data, userFavoriteFoods }: FoodCardProps) => {
+  const { addToFavorites } = useAddToFavorites();
+  const { removeFromFavorites } = useRemoveFromFavorites();
+  const [isFavorite, setIsFavorite] = useState(false);
+  useEffect(() => {
+    setIsFavorite(
+      userFavoriteFoods?.some((food) => food.id === data.id) || false
+    );
+  }, [userFavoriteFoods, data.id]);
+  const handleAddToFavorites = async () => {
+    try {
+      if (!isFavorite) {
+        setIsFavorite(true);
+        await addToFavorites(data.id);
+      } else {
+        setIsFavorite(false);
+        await removeFromFavorites(data.id);
+      }
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
+    }
+  };
+
   return (
     <Link
       href={{ pathname: "/(protected)/food/[id]", params: { id: data.id } }}
@@ -25,8 +51,12 @@ const FoodCard = ({ data }: FoodCardProps) => {
         <View className="flex flex-row items-center justify-start mt-1 gap-2">
           <AntDesign name="star" size={16} color="#FF9633" />
           <Text className="text-[#808080] text-base">{data?.rating}</Text>
-          <TouchableOpacity onPress={() => {}} className="ml-auto">
-            <AntDesign name="hearto" size={16} color="#EF2A39" />
+          <TouchableOpacity onPress={handleAddToFavorites} className="ml-auto">
+            <AntDesign
+              name={isFavorite ? "heart" : "hearto"}
+              size={16}
+              color="#EF2A39"
+            />
           </TouchableOpacity>
         </View>
       </TouchableOpacity>

@@ -13,7 +13,6 @@ export function useRemoveFromFavorites() {
     },
     onSuccess: () => {
       // Invalidate and refetch
-      console.log("Invalidating favorite foods queries");
       queryClient.invalidateQueries({
         queryKey: [queryKeys.userFavoriteFoods, queryKeys.allFoods],
       });
