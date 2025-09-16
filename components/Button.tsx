@@ -12,7 +12,6 @@ const Button = ({ mode = "elevated", style, children, ...props }: Props) => (
       { backgroundColor: Colors.light.buttonPrimary },
       style,
     ]}
-    contentStyle={{ height: 60 }}
     labelStyle={[styles.text, props.labelStyle]}
     mode={mode}
     {...props}

@@ -3,7 +3,6 @@ import api from "@/lib/axios";
 import { CommonResponseDataType } from "@/types/common";
 import { User } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
-import { isLoaded } from "expo-font";
 
 export interface SignInRequest {
   email: string;

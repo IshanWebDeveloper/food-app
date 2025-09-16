@@ -6,6 +6,8 @@ export interface SignUpRequest {
   email: string;
   password: string;
   name: string;
+  phone_number: string;
+  delivery_address: string;
 }
 
 export function useUserSignUp() {

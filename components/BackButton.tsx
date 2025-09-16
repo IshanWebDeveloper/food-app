@@ -7,7 +7,7 @@ const BackButton = () => {
   const router = useRouter();
   return (
     <TouchableOpacity
-      className="p-2 ml-4 rounded-full"
+      className="p-2 rounded-full"
       onPress={() => router.back()}
     >
       <AntDesign name="arrowleft" size={24} color="white" />

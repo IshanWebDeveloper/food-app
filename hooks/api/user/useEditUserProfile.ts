@@ -1,17 +1,12 @@
 import { ENDPOINTS } from "@/api/api-endpoints";
 import api from "@/lib/axios";
+import { User } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 
-export interface EditUserProfileRequest {
-  email: string;
-  password: string;
-  name: string;
-}
-
-export function useEditUserProfile() {
+export function useEditUserProfile(userId: string) {
   const editUserProfileMutation = useMutation({
-    mutationFn: async (data: EditUserProfileRequest) => {
-      return await api.put(ENDPOINTS.AUTH.EDIT_PROFILE, data);
+    mutationFn: async (data: Partial<User>) => {
+      return await api.put(ENDPOINTS.AUTH.EDIT_PROFILE(userId), data);
     },
   });
 

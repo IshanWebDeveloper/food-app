@@ -53,26 +53,26 @@ const TextInputWithIcon = ({
           selectionColor={Colors.light.primary}
           contentStyle={{
             color: Colors.light.inputText,
-            maxHeight: 40,
+            fontFamily: "JakartaMedium",
+            alignContent: "center",
+            alignItems: "center",
+            flex: 1,
           }}
           placeholderTextColor={Colors.light.inputText}
           underlineColor="transparent"
           mode="outlined"
-          right={
+          left={
             <Input.Icon
               centered={true}
-              size={15}
+              size={18}
               icon={iconImage}
               underlayColor={Colors.light.background}
-              style={{
-                marginBottom: 20,
-              }}
             />
           }
           outlineStyle={[
             {
               borderRadius: 20,
-              borderColor: Colors.light.borderColor,
+              borderColor: "#E2E2E2",
             },
             outlineStyle,
           ]}
@@ -90,16 +90,17 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
     marginHorizontal: 12,
+    width: 320,
   },
   input: {
     backgroundColor: Colors.light.background,
     color: Colors.light.inputText,
     fontSize: 15,
-    fontFamily: "Poppins-Regular",
-    paddingHorizontal: 22,
+    fontFamily: "JakartaMedium",
+    paddingHorizontal: 5,
     paddingVertical: 0,
     flexDirection: "row",
-    maxHeight: 40,
+    height: 60,
   },
   error: {
     fontSize: 14,

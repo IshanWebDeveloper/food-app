@@ -1,82 +1,131 @@
 import AppLogoName from "@/components/AppLogoName";
 import AuthLinearGradientWrapper from "@/components/AuthLinearGradientWrapper";
+import Button from "@/components/Button";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
+import TextInput from "@/components/TextInput";
+import { Colors } from "@/constants/Colors";
 import { AuthContext } from "@/context/authContext";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import { useCallback, useContext, useState } from "react";
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Controller, useForm } from "react-hook-form";
+import { Alert, Dimensions, ScrollView, Text, View } from "react-native";
+import z from "zod";
+
+const signInSchema = z.object({
+  email: z.email({ message: "Invalid email address" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+});
 
 const SignIn = () => {
   const { handleSignIn, isSigningIn } = useContext(AuthContext);
-
-  const [form, setForm] = useState({
+  const defaultValues: z.infer<typeof signInSchema> = {
     email: "",
     password: "",
+  };
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<z.infer<typeof signInSchema>>({
+    defaultValues: defaultValues,
+    resolver: zodResolver(signInSchema),
+    mode: "all",
+    reValidateMode: "onChange",
+    resetOptions: { keepDirtyValues: true },
   });
 
-  const onSignInPress = useCallback(async () => {
-    try {
-      if (!form.email || !form.password) {
-        Alert.alert("Error", "Please fill in all fields.");
-        return;
+  const onSignInPress = useCallback(
+    async (data: z.infer<typeof signInSchema>) => {
+      try {
+        if (!data.email || !data.password) {
+          Alert.alert("Error", "Please fill in all fields.");
+          return;
+        }
+        await handleSignIn({
+          email: data.email,
+          password: data.password,
+        });
+      } catch (error) {
+        console.error("Error signing in:", error);
+        Alert.alert("Error", "Log in failed. Please try again.");
       }
-      await handleSignIn({
-        email: form.email,
-        password: form.password,
-      });
-    } catch (error) {
-      console.error("Error signing in:", error);
-      Alert.alert("Error", "Log in failed. Please try again.");
-    }
-  }, [form]);
+    },
+    [handleSignIn]
+  );
 
   return (
-    <AuthLinearGradientWrapper>
-      <ScrollView className="flex-1 bg-transparent">
-        <View className="flex-1">
-          <View className="relative h-[250px] w-full">
-            <AppLogoName />
-            <Text className="absolute bottom-5 left-5 font-JakartaSemiBold text-2xl text-white">
-              Welcome 👋
-            </Text>
-          </View>
+    <AuthLinearGradientWrapper customeStyles="pt-4 px-0 pb-0">
+      <AppLogoName />
+      <View className="flex-1 ">
+        <View
+          className="flex flex-col rounded-t-[35px] mt-20 bg-white  p-5 shadow-sm"
+          style={{ height: Dimensions.get("window").height }}
+        >
+          <Controller
+            control={control}
+            name={"email"}
+            render={({ field: { onChange, value, onBlur } }) => (
+              <TextInput
+                labelText={"Email"}
+                returnKeyType="next"
+                value={value}
+                onChangeText={(value) => onChange(value)}
+                error={!!errors.email}
+                errorText={errors.email?.message}
+                onBlur={onBlur}
+                autoCapitalize="none"
+                textContentType="emailAddress"
+                keyboardType="default"
+              />
+            )}
+          />
 
-          <View className="p-5">
-            <InputField
-              label="Email"
-              placeholder="Enter email"
-              textContentType="emailAddress"
-              value={form.email}
-              onChangeText={(value) => setForm({ ...form, email: value })}
-            />
+          <Controller
+            control={control}
+            name={"password"}
+            render={({ field: { onChange, value, onBlur } }) => (
+              <TextInput
+                labelText={"Password"}
+                returnKeyType="done"
+                value={value}
+                onChangeText={(value) => onChange(value)}
+                error={!!errors.password}
+                errorText={errors.password?.message}
+                onBlur={onBlur}
+                autoCapitalize="none"
+                textContentType="password"
+                secureTextEntry
+              />
+            )}
+          />
 
-            <InputField
-              label="Password"
-              placeholder="Enter password"
-              secureTextEntry={true}
-              textContentType="password"
-              value={form.password}
-              onChangeText={(value) => setForm({ ...form, password: value })}
-            />
+          <Button
+            mode="contained"
+            style={{
+              backgroundColor: Colors.light.primary,
+              height: 60,
+            }}
+            labelStyle={{ color: "white", fontSize: 18, marginRight: 10 }}
+            onPress={handleSubmit(onSignInPress)}
+          >
+            {isSigningIn ? "Signing In..." : "Sign In"}
+          </Button>
 
-            <CustomButton
-              title={isSigningIn ? "Signing In..." : "Sign In"}
-              textVariant="primary"
-              onPress={onSignInPress}
-              className="p-6 my-3 text-black  bg-blue-400"
-            />
-
-            <Link
-              href="/sign-up"
-              className="mt-10 text-center text-lg text-general-200"
-            >
-              Don't have an account?{" "}
-              <Text className="text-primary-500">Sign Up</Text>
-            </Link>
-          </View>
+          <Link
+            href="/sign-up"
+            className="mt-10 text-center text-lg text-general-200"
+          >
+            Don't have an account?{" "}
+            <Text className="text-primary-500 underline">Sign Up</Text>
+          </Link>
         </View>
-      </ScrollView>
+      </View>
     </AuthLinearGradientWrapper>
   );
 };

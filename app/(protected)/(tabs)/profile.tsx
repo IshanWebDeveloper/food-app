@@ -3,34 +3,38 @@ import Button from "@/components/Button";
 import TextInput from "@/components/TextInput";
 import { Colors } from "@/constants/Colors";
 import { AuthContext } from "@/context/authContext";
+import { useEditUserProfile } from "@/hooks/api/user/useEditUserProfile";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ScrollView, View, Image } from "react-native";
+import { ScrollView, View, Image, Alert } from "react-native";
 import z from "zod";
 
 const editProfileSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   email: z.email({ message: "Email is required" }),
-  deliveryAddress: z
+  delivery_address: z
     .string()
     .min(1, { message: "Delivery address is required" }),
-  phoneNumber: z.string().min(1, { message: "Phone number is required" }),
+  phone_number: z.string().min(1, { message: "Phone number is required" }),
 });
 
 const Profile = () => {
   const { handleSignOut } = useContext(AuthContext);
   const {
     authState: { user },
+    setAuthState,
   } = useAuthStore();
+  const { editProfile } = useEditUserProfile(user?.id || "");
+
   const defaultValues = {
     name: user?.name || "",
     email: user?.email || "",
-    deliveryAddress: user?.deliveryAddress || "",
-    phoneNumber: user?.phoneNumber || "",
+    delivery_address: user?.delivery_address || "",
+    phone_number: user?.phone_number || "",
   };
   const {
     control,
@@ -50,6 +54,32 @@ const Profile = () => {
       // Reset form when screen is focused
       reset(defaultValues);
     }, [reset])
+  );
+  const onEditProfile = useCallback(
+    async (data: z.infer<typeof editProfileSchema>) => {
+      try {
+        await editProfile({
+          email: data.email,
+          name: data.name, // Placeholder, replace with actual password handling
+          delivery_address: data.delivery_address,
+          phone_number: data.phone_number,
+        });
+        Alert.alert("Success", "Profile updated successfully.");
+        setAuthState({
+          user: {
+            id: user?.id || "",
+            username: user?.username || "",
+            email: data.email,
+            name: data.name,
+            delivery_address: data.delivery_address,
+            phone_number: data.phone_number,
+          },
+        });
+      } catch (error) {
+        console.error("Error editing profile:", error);
+      }
+    },
+    [editProfile]
   );
   return (
     <AuthLinearGradientWrapper customeStyles="pt-4 px-0 pb-0">
@@ -110,17 +140,17 @@ const Profile = () => {
           />
           <Controller
             control={control}
-            name={"deliveryAddress"}
+            name={"delivery_address"}
             render={({ field: { onChange, value, onBlur } }) => (
               <TextInput
                 labelText={"Delivery Address"}
                 returnKeyType="next"
                 value={value}
                 onChangeText={(value) => onChange(value)}
-                error={!!errors.deliveryAddress}
-                errorText={errors.deliveryAddress?.message}
+                error={!!errors.delivery_address}
+                errorText={errors.delivery_address?.message}
                 outlineColor={
-                  errors.deliveryAddress?.message
+                  errors.delivery_address?.message
                     ? Colors.light.borderColor2
                     : "#E2E8F0"
                 }
@@ -133,17 +163,17 @@ const Profile = () => {
           />
           <Controller
             control={control}
-            name={"phoneNumber"}
+            name={"phone_number"}
             render={({ field: { onChange, value, onBlur } }) => (
               <TextInput
                 labelText={"Phone Number"}
                 returnKeyType="next"
                 value={value}
                 onChangeText={(value) => onChange(value)}
-                error={!!errors.phoneNumber}
-                errorText={errors.phoneNumber?.message}
+                error={!!errors.phone_number}
+                errorText={errors.phone_number?.message}
                 outlineColor={
-                  errors.deliveryAddress?.message
+                  errors.phone_number?.message
                     ? Colors.light.borderColor2
                     : "#E2E8F0"
                 }
@@ -159,9 +189,9 @@ const Profile = () => {
             <Button
               mode="outlined"
               style={{ flex: 1, backgroundColor: Colors.light.buttonSecondary }}
-              onPress={() => {}}
+              onPress={handleSubmit(onEditProfile)}
             >
-              Edit Profile{" "}
+              Edit Profile
               <AntDesign name="edit" size={16} color="white" className="ml-2" />
             </Button>
             <Button

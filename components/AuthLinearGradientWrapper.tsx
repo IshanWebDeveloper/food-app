@@ -11,10 +11,10 @@ const AuthLinearGradientWrapper = ({
 }: AuthGradientWrapperProps) => {
   return (
     <LinearGradient
-      colors={["#FF939B", "#EF2A39"]}
+      colors={["#EF2A37", "#EF2A39"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0.5, y: 1 }}
-      className={`flex-1 rounded-[35px] p-4 ${customeStyles}`}
+      className={`flex-1 rounded-[35px] ${customeStyles}`}
     >
       <SafeAreaView className="flex-1">{children}</SafeAreaView>
     </LinearGradient>

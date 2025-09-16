@@ -1,4 +1,9 @@
-import { TextInputProps, TouchableOpacityProps } from "react-native";
+import {
+  StyleProp,
+  TextInputProps,
+  TextStyle,
+  TouchableOpacityProps,
+} from "react-native";
 
 declare interface ButtonProps extends TouchableOpacityProps {
   title: string;
@@ -6,6 +11,7 @@ declare interface ButtonProps extends TouchableOpacityProps {
   textVariant?: "primary" | "default" | "secondary" | "danger" | "success";
   IconLeft?: React.ComponentType<any>;
   IconRight?: React.ComponentType<any>;
+  textStyle?: StyleProp<TextStyle>;
   className?: string;
 }
 
@@ -25,6 +31,32 @@ declare interface User {
   email: string;
   name: string;
   username: string;
-  deliveryAddress?: string;
-  phoneNumber?: string;
+  delivery_address?: string;
+  phone_number?: string;
+}
+
+declare enum Category {
+  All = "All",
+  Combos = "Combos",
+  Sliders = "Sliders",
+  Classics = "Classics",
+}
+
+declare interface FoodItem {
+  id: string;
+  name: string;
+  description: string;
+  preparation_time: number;
+  rating: number;
+  price: number;
+  image_url: string;
+  category_id: string;
+}
+
+declare interface OrderItem {
+  food: FoodItem;
+  quantity: number;
+  taxes: number;
+  delivery_fee: number;
+  total_price: number;
 }

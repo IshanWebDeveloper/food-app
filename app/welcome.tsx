@@ -2,9 +2,8 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import CustomButton from "@/components/CustomButton";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import AppLogoName from "@/components/AppLogoName";
+import Button from "@/components/Button";
 const Home = () => {
   const router = useRouter();
 
@@ -17,19 +16,22 @@ const Home = () => {
         end={{ x: 0.5, y: 1 }}
         className="absolute top-0 left-0 right-0 bottom-0 rounded-3xl p-4 items-center"
       >
-        <View className="flex h-full w-full items-center justify-center">
-          <AppLogoName textStyle="text-6xl" />
+        <View className="flex h-full w-full items-center justify-center relative">
+          <AppLogoName textStyle="text-6xl text-white" />
 
-          <CustomButton
-            title="Get Started"
+          <Button
+            className="flex-row items-center justify-center absolute bottom-20"
             onPress={() => router.push("/sign-in")}
-            IconRight={() => (
-              <Ionicons name="arrow-forward" size={20} color="white" />
-            )}
-            textVariant="default"
-            bgVariant="secondary"
-            className="w-[200px] border border-white my-4 p-2 text-white"
-          />
+            mode="outlined"
+            style={{
+              borderColor: "white",
+              borderWidth: 0.75,
+              backgroundColor: "transparent",
+              width: 300,
+            }}
+          >
+            Get Started
+          </Button>
         </View>
       </LinearGradient>
     </SafeAreaView>

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleProp, StyleSheet, Text, TextStyle, View } from "react-native";
 import React from "react";
 
 interface AppLogoNameProps {
@@ -9,7 +9,7 @@ interface AppLogoNameProps {
 
 const AppLogoName: React.FC<AppLogoNameProps> = ({
   viewStyle,
-  textStyle,
+  textStyle = "text-white",
   hideTagline = false,
 }) => {
   return (
@@ -17,7 +17,7 @@ const AppLogoName: React.FC<AppLogoNameProps> = ({
       className={` h-fit w-fit p-2 items-center justify-center ${viewStyle}`}
     >
       <Text
-        className={`mb-2 text-6xl text-white ${textStyle}`}
+        className={`mb-2 text-6xl ${textStyle}`}
         style={{ fontFamily: "LobsterRegular" }}
       >
         FoodGo

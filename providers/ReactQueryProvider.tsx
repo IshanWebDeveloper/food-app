@@ -1,7 +1,6 @@
 import { defaultQueryFn } from "@/lib/default-query-fn";
 import {
   defaultShouldDehydrateQuery,
-  isServer,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";

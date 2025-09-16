@@ -13,6 +13,7 @@ export const Colors = {
     label: "#11181C",
     background: "#fff",
     inputText: "#000",
+    textSecondary: "#808080",
     borderColor: "#EF2A39",
     borderColor2: "#E2E8F0",
     error: "#ff0033",

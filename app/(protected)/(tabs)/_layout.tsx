@@ -1,12 +1,6 @@
 import { Tabs } from "expo-router";
-import {
-  Image,
-  ImageSourcePropType,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, ImageSourcePropType, View } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useRouteInfo, useRouter } from "expo-router/build/hooks";
 import BackButton from "@/components/BackButton";
 const TabIcon = ({
   source,
@@ -43,6 +37,7 @@ export default function Layout() {
         headerTransparent: true,
         headerTitle: "",
         headerShown: true,
+        headerLeftContainerStyle: { paddingLeft: 16 },
         headerLeft: () => <BackButton />,
         headerRight: () => (
           <AntDesign name="setting" size={24} color="white" className="mr-4" />
@@ -85,6 +80,22 @@ export default function Layout() {
           tabBarIcon: ({ focused }) => (
             <AntDesign name="home" size={24} color="black" focused={focused} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="cart"
+        options={{
+          title: "Cart",
+          headerShown: true,
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              name="shoppingcart"
+              size={24}
+              color="black"
+              focused={focused}
+            />
+          ),
+          tabBarStyle: { display: "none" },
         }}
       />
       <Tabs.Screen

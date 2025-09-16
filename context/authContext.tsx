@@ -1,11 +1,15 @@
 import { SplashScreen, useRouter } from "expo-router";
 import { createContext, PropsWithChildren, useEffect } from "react";
 import { SignInRequest, useUserSignIn } from "@/hooks/api/auth/useSignIn";
-import { SignOutRequest, useUserSignOut } from "@/hooks/api/auth/useSignOut";
+import { useUserSignOut } from "@/hooks/api/auth/useSignOut";
 import { useAuthStore } from "@/hooks/useAuthStore";
-import { removeAuthToken, saveAuthToken } from "@/lib/authToken";
-import { AUTH_TOKEN_KEY } from "@/constants/authKey";
+import { getAuthToken, removeAuthToken, saveAuthToken } from "@/lib/authToken";
 import { AuthTokenType } from "@/types/common";
+import api, { setUnauthorizedHandler } from "@/lib/axios";
+import { ENDPOINTS } from "@/api/api-endpoints";
+import { useDataPreloader } from "@/hooks/useDataPreloader";
+import { queryKeys } from "@/constants/queryKeys";
+
 SplashScreen.preventAutoHideAsync();
 
 type AuthState = {
@@ -31,6 +35,22 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const { signOut, isPending: isSigningOut } = useUserSignOut();
   const { authState, setAuthState, reset, isReady, setIsLoggedIn, isLoggedIn } =
     useAuthStore();
+  const { prefetching } = useDataPreloader([
+    {
+      key: queryKeys.allCategories,
+      fetcher: async () => {
+        const response = await api.get(ENDPOINTS.CATEGORIES.GET_ALL);
+        return response.data;
+      },
+    },
+    {
+      key: queryKeys.allFoods,
+      fetcher: async () => {
+        const response = await api.get(ENDPOINTS.FOODS.GET_ALL);
+        return response.data;
+      },
+    },
+  ]);
 
   const router = useRouter();
 
@@ -67,14 +87,48 @@ export function AuthProvider({ children }: PropsWithChildren) {
       router.replace("/welcome");
     } catch (error) {
       console.error("Error signing out:", error);
+      await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
+      await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
+      setIsLoggedIn(false);
+      reset();
+      router.replace("/welcome");
     }
   };
 
+  // periodically refresh access token
   useEffect(() => {
-    if (isReady) {
+    const interval = setInterval(async () => {
+      const storedRefreshToken = await getAuthToken(
+        AuthTokenType.REFRESH_TOKEN
+      );
+      if (!storedRefreshToken) {
+        router.replace("/sign-in");
+      }
+      const response = await api.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {
+        refresh_token: storedRefreshToken,
+      });
+      await saveAuthToken(
+        AuthTokenType.ACCESS_TOKEN,
+        response.data.data.accessToken
+      );
+      await saveAuthToken(
+        AuthTokenType.REFRESH_TOKEN,
+        response.data.data.refreshToken
+      );
+    }, 14 * 60 * 1000); // every 14 min
+    return () => clearInterval(interval);
+  }, []);
+  useEffect(() => {
+    setUnauthorizedHandler(async () => {
+      // Custom logic: e.g., reset auth state, navigate to login, show alert, etc.
+      await handleSignOut(); // or your logout logic
+    });
+  }, []);
+  useEffect(() => {
+    if (isReady && !prefetching) {
       SplashScreen.hideAsync();
     }
-  }, [isReady]);
+  }, [isReady, prefetching]);
 
   return (
     <AuthContext.Provider

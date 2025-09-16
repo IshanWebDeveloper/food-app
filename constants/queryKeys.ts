@@ -1,3 +1,6 @@
 export const queryKeys = {
-  login: ["login"],
+  userProfile: ["userProfile"],
+  allCategories: ["allCategories"],
+  allFoods: ["allFoods"],
+  foodById: (id: string) => ["foodById", id],
 };
