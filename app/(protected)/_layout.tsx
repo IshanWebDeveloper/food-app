@@ -33,10 +33,6 @@ const Layout = () => {
         name="payment-success-modal"
         options={{
           headerShown: false,
-          title: "",
-          headerTitleAlign: "center",
-          headerTransparent: true,
-          headerBackButtonDisplayMode: "default",
           presentation: "transparentModal",
           animation: "fade",
         }}
