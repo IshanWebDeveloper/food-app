@@ -1,6 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
-import { int } from "zod";
+import { Text, TouchableOpacity, View } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 interface IncrementDecrementProps {
@@ -38,5 +36,3 @@ const IncrementDecrement = ({
 };
 
 export default IncrementDecrement;
-
-const styles = StyleSheet.create({});

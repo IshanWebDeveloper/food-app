@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
 import { FoodItem } from "@/types/types";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -48,5 +48,3 @@ const FavoriteFoodCard = ({ data, handleRemoveFavorite }: FoodCardProps) => {
 };
 
 export default FavoriteFoodCard;
-
-const styles = StyleSheet.create({});

@@ -71,6 +71,6 @@ export const useAuthStore = create<AuthStore>()(
         isLoggedIn: state.isLoggedIn,
         isReady: state.isReady,
       }),
-    }
-  )
+    },
+  ),
 );

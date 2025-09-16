@@ -33,8 +33,8 @@ export function useDataPreloader(queries: PreloadQuery[]): {
           queryKey: key,
           queryFn: fetcher,
           ...options,
-        })
-      )
+        }),
+      ),
     )
       .catch((err) => {
         console.error("Error prefetching data:", err);

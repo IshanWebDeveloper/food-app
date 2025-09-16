@@ -29,7 +29,7 @@ export const useOrderStore = create<OrderStore>()(
       },
       addToOrder: (item: OrderItem) => {
         const existingItem = get().orderItems.find(
-          (orderItem) => orderItem.food.id === item.food.id
+          (orderItem) => orderItem.food.id === item.food.id,
         );
         if (existingItem) {
           // If item already exists, update the quantity
@@ -37,7 +37,7 @@ export const useOrderStore = create<OrderStore>()(
             orderItems: get().orderItems.map((orderItem) =>
               orderItem.food.id === item.food.id
                 ? { ...orderItem, quantity: orderItem.quantity + item.quantity }
-                : orderItem
+                : orderItem,
             ),
           });
         } else {
@@ -48,7 +48,7 @@ export const useOrderStore = create<OrderStore>()(
       removeFromOrder: (itemId: string) => {
         set({
           orderItems: get().orderItems.filter(
-            (orderItem) => orderItem.food.id !== itemId
+            (orderItem) => orderItem.food.id !== itemId,
           ),
         });
       },
@@ -69,6 +69,6 @@ export const useOrderStore = create<OrderStore>()(
       partialize: (state) => ({
         orderItems: state.orderItems,
       }),
-    }
-  )
+    },
+  ),
 );

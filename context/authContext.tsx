@@ -1,5 +1,10 @@
 import { SplashScreen, useRouter } from "expo-router";
-import { createContext, PropsWithChildren, useEffect } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+} from "react";
 import { SignInRequest, useUserSignIn } from "@/hooks/api/auth/useSignIn";
 import { useUserSignOut } from "@/hooks/api/auth/useSignOut";
 import { useAuthStore } from "@/hooks/useAuthStore";
@@ -65,11 +70,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
       await saveAuthToken(
         AuthTokenType.ACCESS_TOKEN,
-        response.data.data.accessToken
+        response.data.data.accessToken,
       );
       await saveAuthToken(
         AuthTokenType.REFRESH_TOKEN,
-        response.data.data.refreshToken
+        response.data.data.refreshToken,
       );
       router.replace("/(protected)/(tabs)/home");
     } catch (error) {
@@ -77,7 +82,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   };
 
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
     try {
       await signOut({ userId: authState.user?.id! });
       setIsLoggedIn(false);
@@ -93,37 +98,40 @@ export function AuthProvider({ children }: PropsWithChildren) {
       reset();
       router.replace("/sign-in");
     }
-  };
+  }, [router, signOut, authState.user?.id, reset, setIsLoggedIn]);
 
   // periodically refresh access token
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const storedRefreshToken = await getAuthToken(
-        AuthTokenType.REFRESH_TOKEN
-      );
-      if (!storedRefreshToken) {
-        router.replace("/sign-in");
-      }
-      const response = await api.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {
-        refresh_token: storedRefreshToken,
-      });
-      await saveAuthToken(
-        AuthTokenType.ACCESS_TOKEN,
-        response.data.data.accessToken
-      );
-      await saveAuthToken(
-        AuthTokenType.REFRESH_TOKEN,
-        response.data.data.refreshToken
-      );
-    }, 14 * 60 * 1000); // every 14 min
+    const interval = setInterval(
+      async () => {
+        const storedRefreshToken = await getAuthToken(
+          AuthTokenType.REFRESH_TOKEN,
+        );
+        if (!storedRefreshToken) {
+          router.replace("/sign-in");
+        }
+        const response = await api.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {
+          refresh_token: storedRefreshToken,
+        });
+        await saveAuthToken(
+          AuthTokenType.ACCESS_TOKEN,
+          response.data.data.accessToken,
+        );
+        await saveAuthToken(
+          AuthTokenType.REFRESH_TOKEN,
+          response.data.data.refreshToken,
+        );
+      },
+      14 * 60 * 1000,
+    ); // every 14 min
     return () => clearInterval(interval);
-  }, []);
+  }, [router]);
   useEffect(() => {
     setUnauthorizedHandler(async () => {
       // Custom logic: e.g., reset auth state, navigate to login, show alert, etc.
       await handleSignOut(); // or your logout logic
     });
-  }, []);
+  }, [handleSignOut]);
   useEffect(() => {
     if (isReady && !prefetching) {
       SplashScreen.hideAsync();

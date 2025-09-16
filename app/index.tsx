@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { Redirect } from "expo-router";
 
-const index = () => {
+const Index = () => {
   // get auth from storage
   const { isLoggedIn, isReady } = useAuthStore();
 
@@ -12,4 +12,4 @@ const index = () => {
   return <Redirect href="/welcome" />;
 };
 
-export default index;
+export default Index;

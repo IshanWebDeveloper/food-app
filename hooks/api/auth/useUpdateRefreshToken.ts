@@ -19,7 +19,7 @@ export interface UpdateRefreshTokenResponse {
 export function useUpdateRefreshToken() {
   const mutation = useMutation({
     mutationFn: async (
-      data: UpdateRefreshTokenRequest
+      data: UpdateRefreshTokenRequest,
     ): Promise<UpdateRefreshTokenResponse> => {
       try {
         const response = await axios.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {

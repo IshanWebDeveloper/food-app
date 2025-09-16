@@ -10,7 +10,7 @@ export function useGetUserFavoriteFoods() {
     queryKey: queryKeys.userFavoriteFoods,
     queryFn: async () => {
       const response = await api.get<CommonResponseDataType<FoodItem[]>>(
-        ENDPOINTS.USER.GET_FAVORITES
+        ENDPOINTS.USER.GET_FAVORITES,
       );
       return response.data;
     },

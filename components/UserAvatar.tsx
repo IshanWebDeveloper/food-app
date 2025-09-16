@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
-import { Image, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 
 interface UserAvatarProps {
   size?: number;

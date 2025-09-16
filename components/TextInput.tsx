@@ -35,7 +35,7 @@ const TextInput = forwardRef<TextInputRefType, Props>(
       outlineStyle,
       ...props
     }: Props,
-    ref
+    ref,
   ) => (
     <View style={[styles.container, customViewStyle]}>
       {labelText && (
@@ -77,8 +77,10 @@ const TextInput = forwardRef<TextInputRefType, Props>(
       />
       {errorText ? <Text style={styles.error}>{errorText}</Text> : null}
     </View>
-  )
+  ),
 );
+
+TextInput.displayName = "TextInput";
 
 const styles = StyleSheet.create({
   container: {

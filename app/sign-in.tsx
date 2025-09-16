@@ -1,17 +1,14 @@
 import AppLogoName from "@/components/AppLogoName";
 import AuthLinearGradientWrapper from "@/components/AuthLinearGradientWrapper";
 import Button from "@/components/Button";
-import CustomButton from "@/components/CustomButton";
-import InputField from "@/components/InputField";
 import TextInput from "@/components/TextInput";
 import { Colors } from "@/constants/Colors";
 import { AuthContext } from "@/context/authContext";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, Dimensions, ScrollView, Text, View } from "react-native";
+import { Alert, Dimensions, Text, View } from "react-native";
 import z from "zod";
 
 const signInSchema = z.object({
@@ -30,7 +27,6 @@ const SignIn = () => {
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<z.infer<typeof signInSchema>>({
     defaultValues: defaultValues,
@@ -56,7 +52,7 @@ const SignIn = () => {
         Alert.alert("Error", "Log in failed. Please try again.");
       }
     },
-    [handleSignIn]
+    [handleSignIn],
   );
 
   return (

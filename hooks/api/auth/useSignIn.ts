@@ -20,12 +20,12 @@ export function useUserSignIn() {
     mutationFn: async (data: SignInRequest) => {
       return await api.post<CommonResponseDataType<SignInResponse>>(
         ENDPOINTS.AUTH.SIGNIN,
-        data
+        data,
       );
     },
     onError: (error: any) => {
       console.error("Sign-in error:", error);
-    }
+    },
   });
 
   return {
@@ -33,6 +33,6 @@ export function useUserSignIn() {
     isPending: signInMutation.isPending,
     isLoaded: signInMutation.isSuccess,
     isError: signInMutation.isError,
-    error: signInMutation.error
+    error: signInMutation.error,
   };
 }

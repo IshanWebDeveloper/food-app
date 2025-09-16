@@ -13,7 +13,7 @@ export function useGetAllCategories() {
     queryKey: queryKeys.allCategories,
     queryFn: async () => {
       const response = await api.get<GetAllCategoryResponse[]>(
-        ENDPOINTS.CATEGORIES.GET_ALL
+        ENDPOINTS.CATEGORIES.GET_ALL,
       );
       return response.data;
     },

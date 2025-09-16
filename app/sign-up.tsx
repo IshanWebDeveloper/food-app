@@ -1,8 +1,6 @@
-import CustomButton from "@/components/CustomButton";
-import InputField from "@/components/InputField";
 import { useUserSignUp } from "@/hooks/api/auth/useSignup";
 import { Link, useRouter } from "expo-router";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Alert, Dimensions, ScrollView, Text, View } from "react-native";
 import AuthLinearGradientWrapper from "@/components/AuthLinearGradientWrapper";
 import AppLogoName from "@/components/AppLogoName";
@@ -33,12 +31,12 @@ const signUpSchema = z.object({
     .regex(/[0-9]/, "Password must contain at least one number")
     .regex(
       /[^A-Za-z0-9]/,
-      "Password must contain at least one special character"
+      "Password must contain at least one special character",
     ),
 });
 
 const SignUp = () => {
-  const { isLoaded, signUp, isPending } = useUserSignUp();
+  const { signUp, isPending } = useUserSignUp();
   const { handleSignIn } = useContext(AuthContext);
   const router = useRouter();
   const defaultValues: z.infer<typeof signUpSchema> = {

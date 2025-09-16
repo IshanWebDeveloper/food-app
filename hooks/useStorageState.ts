@@ -5,14 +5,14 @@ import { Platform } from "react-native";
 type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];
 
 function useAsyncState<T>(
-  initialValue: [boolean, T | null] = [true, null]
+  initialValue: [boolean, T | null] = [true, null],
 ): UseStateHook<T> {
   return useReducer(
     (
       state: [boolean, T | null],
-      action: T | null = null
+      action: T | null = null,
     ): [boolean, T | null] => [false, action],
-    initialValue
+    initialValue,
   ) as UseStateHook<T>;
 }
 
@@ -45,7 +45,7 @@ export function useStorageState(key: string): UseStateHook<string> {
     SecureStore.getItemAsync(key).then((value) => {
       setState(value);
     });
-  }, [key]);
+  }, [key, setState]);
 
   // Set
   const setValue = useCallback(
@@ -53,7 +53,7 @@ export function useStorageState(key: string): UseStateHook<string> {
       setState(value);
       setStorageItemAsync(key, value);
     },
-    [key]
+    [key, setState],
   );
 
   return [state, setValue];

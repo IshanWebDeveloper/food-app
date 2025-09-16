@@ -1,5 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import { TouchableOpacity } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
 
@@ -16,5 +15,3 @@ const BackButton = () => {
 };
 
 export default BackButton;
-
-const styles = StyleSheet.create({});

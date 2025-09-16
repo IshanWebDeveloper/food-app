@@ -13,7 +13,7 @@ export function useIsFoodFavorite(foodId: string) {
         ENDPOINTS.USER.IS_FOOD_FAVORITE,
         {
           foodId,
-        }
+        },
       );
       return response.data;
     },

@@ -6,7 +6,6 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
-  Image,
 } from "react-native";
 import { TextInput as Input, Text } from "react-native-paper";
 import { IconSource } from "react-native-paper/lib/typescript/components/Icon";

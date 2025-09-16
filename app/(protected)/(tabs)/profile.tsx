@@ -8,7 +8,7 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFocusEffect } from "expo-router";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ScrollView, View, Image, Alert } from "react-native";
 import z from "zod";
@@ -30,12 +30,14 @@ const Profile = () => {
   } = useAuthStore();
   const { editProfile } = useEditUserProfile(user?.id || "");
 
-  const defaultValues = {
-    name: user?.name || "",
-    email: user?.email || "",
-    delivery_address: user?.delivery_address || "",
-    phone_number: user?.phone_number || "",
-  };
+  const defaultValues = useMemo(() => {
+    return {
+      name: user?.name || "",
+      email: user?.email || "",
+      delivery_address: user?.delivery_address || "",
+      phone_number: user?.phone_number || "",
+    };
+  }, [user]);
   const {
     control,
     handleSubmit,
@@ -53,7 +55,7 @@ const Profile = () => {
     useCallback(() => {
       // Reset form when screen is focused
       reset(defaultValues);
-    }, [reset])
+    }, [reset, defaultValues]),
   );
   const onEditProfile = useCallback(
     async (data: z.infer<typeof editProfileSchema>) => {
@@ -79,7 +81,7 @@ const Profile = () => {
         console.error("Error editing profile:", error);
       }
     },
-    [editProfile]
+    [editProfile, setAuthState, user?.id, user?.username],
   );
   return (
     <AuthLinearGradientWrapper customeStyles="pt-4 px-0 pb-0">

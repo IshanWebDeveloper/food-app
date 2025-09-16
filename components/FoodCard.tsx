@@ -17,7 +17,7 @@ const FoodCard = ({ data, userFavoriteFoods }: FoodCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
   useEffect(() => {
     setIsFavorite(
-      userFavoriteFoods?.some((food) => food.id === data.id) || false
+      userFavoriteFoods?.some((food) => food.id === data.id) || false,
     );
   }, [userFavoriteFoods, data.id]);
   const handleAddToFavorites = async () => {
