@@ -20,11 +20,20 @@ const CreditCardDetailCard = ({
         backgroundColor: cardType === "Visa" ? "#F3F4F6" : "#3C2F2F",
       }}
     >
-      <Image
-        source={require("../assets/images/master_card_logo.png")}
-        className="w-[70px] h-[40px] mr-4"
-        resizeMode="contain"
-      />
+      {cardType === "MasterCard" && (
+        <Image
+          source={require("../assets/images/master_card_logo.png")}
+          className="w-[70px] h-[40px] mr-4"
+          resizeMode="contain"
+        />
+      )}
+      {cardType === "Visa" && (
+        <Image
+          source={require("../assets/images/visa_card_logo.png")}
+          className="w-[70px] h-[40px] mr-4"
+          resizeMode="contain"
+        />
+      )}
       <View className="flex flex-col gap-2">
         <Text
           className="font-JakartaMedium text-sm"
