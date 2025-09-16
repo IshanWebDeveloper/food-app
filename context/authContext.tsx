@@ -91,7 +91,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
       setIsLoggedIn(false);
       reset();
-      router.replace("/welcome");
+      router.replace("/sign-in");
     }
   };
 
