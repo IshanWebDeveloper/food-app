@@ -10,6 +10,10 @@ export const ENDPOINTS = {
   },
   USER: {
     GET_PROFILE: `${BASE_URL}/api/v1/user/profile`,
+    ADD_TO_FAVORITES: `${BASE_URL}/api/v1/user/favorites`,
+    REMOVE_FROM_FAVORITES: `${BASE_URL}/api/v1/user/favorites/remove`,
+    GET_FAVORITES: `${BASE_URL}/api/v1/user/favorites`,
+    IS_FOOD_FAVORITE: `${BASE_URL}/api/v1/user/favorites/is-favorite`,
   },
   CATEGORIES: {
     GET_ALL: `${BASE_URL}/api/v1/categories`,
