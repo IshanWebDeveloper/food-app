@@ -2,7 +2,7 @@
 import axios, {
   AxiosError,
   AxiosRequestConfig,
-  InternalAxiosRequestConfig
+  InternalAxiosRequestConfig,
 } from "axios";
 
 import { ENDPOINTS } from "../api/api-endpoints";
@@ -28,9 +28,9 @@ const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   },
-  timeout: 30000
+  timeout: 30000,
 });
 
 // authApi: used ONLY for token refresh calls (no request interceptor)
@@ -38,9 +38,9 @@ const authApi = axios.create({
   baseURL: BASE_URL,
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   },
-  timeout: 30000
+  timeout: 30000,
 });
 
 // refresh flow state
@@ -77,7 +77,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (err) => Promise.reject(err)
+  (err) => Promise.reject(err),
 );
 
 // Helper: perform refresh using authApi (no auth header attached)
@@ -89,8 +89,10 @@ export const refreshAccessToken = async (): Promise<string> => {
 
   // POST to refresh endpoint using authApi so it uses baseURL and no auth header
   const response = await authApi.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {
-    refresh_token: refreshToken
+    refresh_token: refreshToken,
   });
+
+  console.log("Refresh response:", response.data);
 
   // accept multiple possible response shapes
   const d = response.data ?? {};
@@ -126,11 +128,11 @@ api.interceptors.response.use(
     if (!error.response) {
       if (error.code === "ECONNABORTED") {
         return Promise.reject(
-          new Error("Request timed out. Please try again.")
+          new Error("Request timed out. Please try again."),
         );
       }
       return Promise.reject(
-        new Error("Network error. Check your internet connection.")
+        new Error("Network error. Check your internet connection."),
       );
     }
 
@@ -143,14 +145,14 @@ api.interceptors.response.use(
       url.includes(ENDPOINTS.AUTH.REFRESH_TOKEN)
     ) {
       return Promise.reject(
-        (error.response.data as CommonResponseDataType<unknown>) ?? error
+        (error.response.data as CommonResponseDataType<unknown>) ?? error,
       );
     }
 
     // non-401 => propagate backend payload
     if (error.response.status !== 401 || !originalRequest) {
       return Promise.reject(
-        (error.response.data as CommonResponseDataType<unknown>) ?? error
+        (error.response.data as CommonResponseDataType<unknown>) ?? error,
       );
     }
 
@@ -160,7 +162,7 @@ api.interceptors.response.use(
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
       if (unauthorizedHandler) await unauthorizedHandler();
       return Promise.reject(
-        (error.response.data as CommonResponseDataType<unknown>) ?? error
+        (error.response.data as CommonResponseDataType<unknown>) ?? error,
       );
     }
 
@@ -202,7 +204,7 @@ api.interceptors.response.use(
     } finally {
       isRefreshing = false;
     }
-  }
+  },
 );
 
 export default api;

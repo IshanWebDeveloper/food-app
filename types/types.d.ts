@@ -42,11 +42,37 @@ declare enum Category {
   Classics = "Classics",
 }
 
+declare type foodTags = "Vegan" | "Vegetarian" | "Non-Vegetarian";
+
+declare interface Restaurant {
+  name: string;
+  address: string;
+  deliveryTime: string;
+  tags: foodTags[];
+  distance: string;
+  closingTime: string;
+  minimumOrder: string;
+  deliveryFee: string;
+  rating: {
+    score: number;
+    text: string;
+    reviewCount: number;
+  };
+  deliveryInfo: {
+    time: string;
+    changeOption: boolean;
+  };
+  groupOrderOption: boolean;
+}
 declare interface FoodItem {
   id: string;
   name: string;
   description: string;
   preparation_time: number;
+  rating_description: "Highly Rated" | "Popular" | "Recommended" | "New";
+  calories: number;
+  ingredients: string;
+  foodType: foodTags[];
   rating: number;
   price: number;
   image_url: string;

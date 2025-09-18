@@ -1,7 +1,15 @@
 import { useUserSignUp } from "@/hooks/api/auth/useSignup";
 import { Link, useRouter } from "expo-router";
 import { useContext } from "react";
-import { Alert, Dimensions, ScrollView, Text, View } from "react-native";
+import {
+  Alert,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import AuthLinearGradientWrapper from "@/components/AuthLinearGradientWrapper";
 import AppLogoName from "@/components/AppLogoName";
 import { z } from "zod";
@@ -88,7 +96,8 @@ const SignUp = () => {
         </Text>
       </View>
       <ScrollView className="flex-1 " showsVerticalScrollIndicator={false}>
-        <View
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
           className="flex flex-col rounded-t-[35px] mt-4 bg-white  p-5 shadow-sm"
           style={{ height: Dimensions.get("screen").height }}
         >
@@ -205,7 +214,7 @@ const SignUp = () => {
             Already have an account?{" "}
             <Text className="text-primary-500 underline">Sign In</Text>
           </Link>
-        </View>
+        </KeyboardAvoidingView>
       </ScrollView>
     </AuthLinearGradientWrapper>
   );

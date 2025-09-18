@@ -1,5 +1,7 @@
-import { StyleProp, StyleSheet, Text, TextStyle, View } from "react-native";
+import { Image } from "react-native";
 import React from "react";
+import { ThemedView } from "./ThemedView";
+import { Colors } from "@/constants/Colors";
 
 interface AppLogoNameProps {
   viewStyle?: string;
@@ -7,33 +9,18 @@ interface AppLogoNameProps {
   hideTagline?: boolean;
 }
 
-const AppLogoName: React.FC<AppLogoNameProps> = ({
-  viewStyle,
-  textStyle = "text-white",
-  hideTagline = false,
-}) => {
+const AppLogoName: React.FC<AppLogoNameProps> = ({ viewStyle }) => {
   return (
-    <View
-      className={` h-fit w-fit p-2 items-center justify-center ${viewStyle}`}
-    >
-      <Text
-        className={`mb-2 text-6xl ${textStyle}`}
-        style={{ fontFamily: "LobsterRegular" }}
-      >
-        FoodGo
-      </Text>
-
-      {!hideTagline && (
-        <View className="mb-2">
-          <Text className="text-xl font-normal text-white">
-            Delicious food, delivered fast
-          </Text>
-        </View>
-      )}
-    </View>
+    <ThemedView className={`w-[160px] h-12 ${viewStyle} ml-4`}>
+      <Image
+        source={require("../assets/images/deliveroo.png")}
+        tintColor={Colors.light.primary}
+        className="w-full h-full"
+        resizeMethod="resize"
+        resizeMode="cover"
+      />
+    </ThemedView>
   );
 };
 
 export default AppLogoName;
-
-const styles = StyleSheet.create({});

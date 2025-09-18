@@ -8,7 +8,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import { useCallback, useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, Dimensions, Text, View } from "react-native";
+import {
+  Alert,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  View,
+} from "react-native";
+import Toast from "react-native-toast-message";
 import z from "zod";
 
 const signInSchema = z.object({
@@ -48,8 +56,11 @@ const SignIn = () => {
           password: data.password,
         });
       } catch (error) {
-        console.error("Error signing in:", error);
-        Alert.alert("Error", "Log in failed. Please try again.");
+        Toast.show({
+          type: "error",
+          text1: "Sign In Failed",
+          text2: (error as Error).message,
+        });
       }
     },
     [handleSignIn],
@@ -58,7 +69,10 @@ const SignIn = () => {
   return (
     <AuthLinearGradientWrapper customeStyles="pt-4 px-0 pb-0">
       <AppLogoName />
-      <View className="flex-1 ">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={{ flex: 1 }}
+      >
         <View
           className="flex flex-col rounded-t-[35px] mt-20 bg-white  p-5 shadow-sm"
           style={{ height: Dimensions.get("window").height }}
@@ -121,7 +135,7 @@ const SignIn = () => {
             <Text className="text-primary-500 underline">Sign Up</Text>
           </Link>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </AuthLinearGradientWrapper>
   );
 };

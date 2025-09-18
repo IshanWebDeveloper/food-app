@@ -14,6 +14,7 @@ import api, { setUnauthorizedHandler } from "@/lib/axios";
 import { ENDPOINTS } from "@/api/api-endpoints";
 import { useDataPreloader } from "@/hooks/useDataPreloader";
 import { queryKeys } from "@/constants/queryKeys";
+import { BaseToast } from "react-native-toast-message";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,22 +41,22 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const { signOut, isPending: isSigningOut } = useUserSignOut();
   const { authState, setAuthState, reset, isReady, setIsLoggedIn, isLoggedIn } =
     useAuthStore();
-  const { prefetching } = useDataPreloader([
-    {
-      key: queryKeys.allCategories,
-      fetcher: async () => {
-        const response = await api.get(ENDPOINTS.CATEGORIES.GET_ALL);
-        return response.data;
-      },
-    },
-    {
-      key: queryKeys.allFoods,
-      fetcher: async () => {
-        const response = await api.get(ENDPOINTS.FOODS.GET_ALL);
-        return response.data;
-      },
-    },
-  ]);
+  // const { prefetching } = useDataPreloader([
+  //   {
+  //     key: queryKeys.allCategories,
+  //     fetcher: async () => {
+  //       const response = await api.get(ENDPOINTS.CATEGORIES.GET_ALL);
+  //       return response.data;
+  //     },
+  //   },
+  //   {
+  //     key: queryKeys.allFoods,
+  //     fetcher: async () => {
+  //       const response = await api.get(ENDPOINTS.FOODS.GET_ALL);
+  //       return response.data;
+  //     },
+  //   },
+  // ]);
 
   const router = useRouter();
 
@@ -100,43 +101,21 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   }, [router, signOut, authState.user?.id, reset, setIsLoggedIn]);
 
-  // periodically refresh access token
-  useEffect(() => {
-    const interval = setInterval(
-      async () => {
-        const storedRefreshToken = await getAuthToken(
-          AuthTokenType.REFRESH_TOKEN,
-        );
-        if (!storedRefreshToken) {
-          router.replace("/sign-in");
-        }
-        const response = await api.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {
-          refresh_token: storedRefreshToken,
-        });
-        await saveAuthToken(
-          AuthTokenType.ACCESS_TOKEN,
-          response.data.data.accessToken,
-        );
-        await saveAuthToken(
-          AuthTokenType.REFRESH_TOKEN,
-          response.data.data.refreshToken,
-        );
-      },
-      14 * 60 * 1000,
-    ); // every 14 min
-    return () => clearInterval(interval);
-  }, [router]);
   useEffect(() => {
     setUnauthorizedHandler(async () => {
       // Custom logic: e.g., reset auth state, navigate to login, show alert, etc.
-      await handleSignOut(); // or your logout logic
+      await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
+      await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
+      setIsLoggedIn(false);
+      reset();
+      router.replace("/sign-in");
     });
-  }, [handleSignOut]);
+  }, [reset, router, setIsLoggedIn]);
   useEffect(() => {
-    if (isReady && !prefetching) {
+    if (isReady) {
       SplashScreen.hideAsync();
     }
-  }, [isReady, prefetching]);
+  }, [isReady]);
 
   return (
     <AuthContext.Provider

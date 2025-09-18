@@ -1,10 +1,27 @@
 import { AuthProvider } from "@/context/authContext";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import Toast from "react-native-toast-message";
+import {
+  IBMPlexSans_100Thin,
+  IBMPlexSans_100Thin_Italic,
+  IBMPlexSans_200ExtraLight,
+  IBMPlexSans_200ExtraLight_Italic,
+  IBMPlexSans_300Light,
+  IBMPlexSans_300Light_Italic,
+  IBMPlexSans_400Regular,
+  IBMPlexSans_400Regular_Italic,
+  IBMPlexSans_500Medium,
+  IBMPlexSans_500Medium_Italic,
+  IBMPlexSans_600SemiBold,
+  IBMPlexSans_600SemiBold_Italic,
+  IBMPlexSans_700Bold,
+  IBMPlexSans_700Bold_Italic,
+} from "@expo-google-fonts/ibm-plex-sans";
 // Import your global CSS file
 import "../global.css";
 import { StatusBar } from "expo-status-bar";
@@ -23,14 +40,20 @@ SplashScreen.preventAutoHideAsync();
 export default function Root() {
   // Set up the auth context and render our layout inside of it.
   const [loaded, error] = useFonts({
-    JakartaRegular: require("../assets/fonts/PlusJakartaSans-Regular.ttf"),
-    JakartaSemiBold: require("../assets/fonts/PlusJakartaSans-SemiBold.ttf"),
-    JakartaBold: require("../assets/fonts/PlusJakartaSans-Bold.ttf"),
-    JakartaMedium: require("../assets/fonts/PlusJakartaSans-Medium.ttf"),
-    JakartaExtraBold: require("../assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
-    JakartaExtraLight: require("../assets/fonts/PlusJakartaSans-ExtraLight.ttf"),
-    JakartaLight: require("../assets/fonts/PlusJakartaSans-Light.ttf"),
-    LobsterRegular: require("../assets/fonts/Lobster-Regular.ttf"),
+    IBMPlexSans_100Thin,
+    IBMPlexSans_100Thin_Italic,
+    IBMPlexSans_200ExtraLight,
+    IBMPlexSans_200ExtraLight_Italic,
+    IBMPlexSans_300Light,
+    IBMPlexSans_300Light_Italic,
+    IBMPlexSans_400Regular,
+    IBMPlexSans_400Regular_Italic,
+    IBMPlexSans_500Medium,
+    IBMPlexSans_500Medium_Italic,
+    IBMPlexSans_600SemiBold,
+    IBMPlexSans_600SemiBold_Italic,
+    IBMPlexSans_700Bold,
+    IBMPlexSans_700Bold_Italic,
   });
   useEffect(() => {
     if (loaded || error) {
@@ -48,26 +71,15 @@ export default function Root() {
         - Other gesture-based interactions
         Must wrap the entire app to function properly
       */}
-        <GestureHandlerRootView style={{ flex: 1, paddingTop: 0 }}>
+        <GestureHandlerRootView style={{ flex: 1, padding: 0 }}>
           {/* 
           Slot renders child routes dynamically
           This includes both (app) and (auth) group routes
         */}
-          <StatusBar style="dark" translucent />
-          <Stack
-            initialRouteName="welcome"
-            screenOptions={{
-              headerShown: false,
-              animation: "none",
-            }}
-          >
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="(protected)" options={{ headerShown: false }} />
-            <Stack.Screen name="welcome" options={{ headerShown: false }} />
-            <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-            <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
+          <Toast />
+          <StatusBar style="light" translucent />
+
+          <Slot />
         </GestureHandlerRootView>
       </AuthProvider>
     </ReactQueryProvider>

@@ -4,6 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import AppLogoName from "@/components/AppLogoName";
 import Button from "@/components/Button";
+import { Colors } from "@/constants/Colors";
 const Home = () => {
   const router = useRouter();
 
@@ -11,7 +12,7 @@ const Home = () => {
     <SafeAreaView className="flex h-full items-center justify-between bg-green">
       <LinearGradient
         // Background Linear Gradient
-        colors={["#FF939B", "#EF2A39"]}
+        colors={[Colors.light.primary, Colors.light.primary]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0.5, y: 1 }}
         className="absolute top-0 left-0 right-0 bottom-0 rounded-3xl p-4 items-center"
