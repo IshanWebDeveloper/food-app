@@ -160,7 +160,7 @@ api.interceptors.response.use(
     if (originalRequest._retry) {
       await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
-      if (unauthorizedHandler) await unauthorizedHandler();
+      // if (unauthorizedHandler) await unauthorizedHandler();
       return Promise.reject(
         (error.response.data as CommonResponseDataType<unknown>) ?? error,
       );
@@ -199,7 +199,7 @@ api.interceptors.response.use(
       // clear tokens and call unauthorized handler
       await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
-      if (unauthorizedHandler) await unauthorizedHandler();
+      // if (unauthorizedHandler) await unauthorizedHandler();
       return Promise.reject(refreshErr);
     } finally {
       isRefreshing = false;

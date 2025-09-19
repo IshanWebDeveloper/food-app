@@ -8,7 +8,7 @@ import { useGetAllFoods } from "@/hooks/api/food/useGetAllFood";
 import { footerLinks, mockSectionFoodData } from "@/lib/mockData/data";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Link, useFocusEffect } from "expo-router";
-import { useCallback, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import {
   Animated,
   Image,
@@ -20,6 +20,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import TabHeader from "@/components/TabHeader";
+import PromotionalCard from "@/components/PromotionalCard";
 // Note: Filter items and categories-related state removed as they were unused
 const Home = () => {
   const { refetch } = useGetAllFoods();
@@ -62,7 +63,6 @@ const Home = () => {
   }).current;
 
   // Stable ref for the callback
-  console.log("Focused item:", focused?.sectionTitle);
 
   const onViewableItemsChanged = useRef(
     (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => {
@@ -148,7 +148,7 @@ const Home = () => {
               </ThemedView>
 
               {/* Details Container */}
-              <View className="flex-col ">
+              <ThemedView className="flex-col ">
                 {/* Title and rating */}
                 <View className="px-4">
                   <Text className="text-[28px] font-plexSansBold text-black">
@@ -206,11 +206,25 @@ const Home = () => {
                   onLayout={({ nativeEvent: { layout } }) => {
                     setInlineBarY(layout.y);
                   }}
+                  className={"bg-white pt-2 pb-1 border-b border-gray-200"}
                   style={{ opacity: inlineOpacity }}
                 >
                   <TabHeader />
                 </Animated.View>
-              </View>
+                <View className="flex-col px-4 py-4 bg-light-background2 ">
+                  <Text className="text-black text-sm font-plexSans">
+                    Adults need around 2000 kcal a day
+                  </Text>
+                  <Text className="text-black text-lg font-plexSansBold mt-6">
+                    40% off selected items
+                  </Text>
+                  <Text className="text-black text-base font-plexSans mt-1 w-[90%]">
+                    Spend £10.00, get 40% off selected items – T&Cs apply. New
+                    customers only.
+                  </Text>
+                  <PromotionalCard />
+                </View>
+              </ThemedView>
             </>
           }
           renderItem={({ item }) => <FoodCard data={item} />}
@@ -230,7 +244,7 @@ const Home = () => {
 
           ListFooterComponent={
             <>
-              <View className="w-full h-fit bg-light-footerOuterColor dark:bg-dark-footerOuterColor p-4 flex-col gap-4">
+              <View className="w-full h-full bg-light-footerOuterColor dark:bg-dark-footerOuterColor p-4 flex-col gap-4">
                 {footerLinks.map((item, index) => (
                   <FooterItemContainer key={index} item={item} />
                 ))}
@@ -243,4 +257,4 @@ const Home = () => {
     </SafeAreaView>
   );
 };
-export default Home;
+export default memo(Home);

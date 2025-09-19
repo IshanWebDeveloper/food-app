@@ -45,24 +45,28 @@ declare enum Category {
 declare type foodTags = "Vegan" | "Vegetarian" | "Non-Vegetarian";
 
 declare interface Restaurant {
+  id: string;
   name: string;
   address: string;
-  deliveryTime: string;
-  tags: foodTags[];
-  distance: string;
-  closingTime: string;
-  minimumOrder: string;
-  deliveryFee: string;
-  rating: {
-    score: number;
-    text: string;
-    reviewCount: number;
-  };
-  deliveryInfo: {
-    time: string;
-    changeOption: boolean;
-  };
-  groupOrderOption: boolean;
+  phone?: string;
+  description?: string;
+  delivery_time?: string;
+  tags?: string;
+  distance?: number;
+  location_url?: string;
+  allergens?: string;
+  hygieneRating?: string;
+  hygiene_rating_url?: string;
+  closing_time?: string;
+  minimum_order_amount?: number;
+  notes: string;
+  delivery_fee?: number;
+  rating_id: number;
+  canChangeDeliveryAddress?: boolean;
+  canGroupOrder?: boolean;
+  image_url?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 declare interface FoodItem {
   id: string;

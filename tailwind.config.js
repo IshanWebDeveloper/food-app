@@ -14,6 +14,7 @@ module.exports = {
           text: "#1A1A1A",
           label: "#2E3333",
           background: "#FFFFFF",
+          background2: "#f9fafa", // very light gray
           inputText: "#000000",
           textSecondary: "#687076",
           borderColor: "#00CCBC",
