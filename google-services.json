@@ -12,7 +12,12 @@
           "package_name": "com.ishan.foodapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "27852237333-d79raqdfni7rke1qbdd8ch99oashp5i3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDEVZvS-j85FPMLbSyK68TFpFOq-Xig5ow"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27852237333-d79raqdfni7rke1qbdd8ch99oashp5i3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
