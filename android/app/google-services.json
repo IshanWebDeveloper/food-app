@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "27852237333-u5tbqn64v3k20gvjmgpd3gbbm4ssif6l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ishan.foodapp",
+            "certificate_hash": "4caf48a97e8d7ac39ae256f032fbbaec0da82048"
+          }
+        },
+        {
           "client_id": "27852237333-d79raqdfni7rke1qbdd8ch99oashp5i3.apps.googleusercontent.com",
           "client_type": 3
         }
