@@ -101,6 +101,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('release.keystore')
+            storePassword 'foodapp'
+            keyAlias 'alias_name'
+            keyPassword 'foodapp'
+        }
     }
     buildTypes {
         debug {
