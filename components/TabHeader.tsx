@@ -1,25 +1,26 @@
-import { View, FlatList } from "react-native";
-import React, { useEffect, useMemo, useRef } from "react";
+import { FlatList, View } from "react-native";
+import { useEffect, useRef } from "react";
 import Tab from "./Tab";
-import { mockSectionFoodData } from "@/lib/mockData/data";
+import {
+  GetAllCategoryResponse,
+  useGetAllCategories,
+} from "@/hooks/api/categories/useGetAllCategories";
 
 interface TabHeaderProps {
   focusSection?: string;
+  handleTabPress: (idx: number) => void; // Optional callback to notify parent of section index to scroll to
 }
 
-const TabHeader = ({ focusSection }: TabHeaderProps) => {
+const TabHeader = ({ focusSection, handleTabPress }: TabHeaderProps) => {
   const scrollRef = useRef<FlatList<any>>(null);
+  const { categories: data } = useGetAllCategories();
 
   // Filtered data used by the FlatList; compute index from THIS array to avoid mismatches
-  const data = useMemo(
-    () => mockSectionFoodData.filter((s) => s.title !== "introduction"),
-    [],
-  );
 
   useEffect(() => {
     if (!focusSection || !scrollRef.current) return;
-
-    const index = data.findIndex((s) => s.title === focusSection);
+    if (!data || data?.length === 0) return;
+    const index = data?.findIndex((s) => s.name === focusSection);
     if (index < 0) return; // not found, nothing to scroll to
 
     try {
@@ -42,6 +43,8 @@ const TabHeader = ({ focusSection }: TabHeaderProps) => {
     }
   }, [focusSection, data]);
 
+  if (!data || data.length === 0) return null;
+
   return (
     <FlatList
       ref={scrollRef}
@@ -57,12 +60,15 @@ const TabHeader = ({ focusSection }: TabHeaderProps) => {
       }}
       horizontal
       data={data}
-      renderItem={({ item: section }) => (
-        <View key={section.title} className="mr-3">
-          <Tab
-            title={section.title}
-            isActive={focusSection === section.title}
-          />
+      renderItem={({
+        item: section,
+        index,
+      }: {
+        item: GetAllCategoryResponse;
+        index: number;
+      }) => (
+        <View className="mr-3">
+          <Tab title={section.name} isActive={focusSection === section.name} />
         </View>
       )}
       getItemLayout={(data, index) => ({
@@ -85,7 +91,7 @@ const TabHeader = ({ focusSection }: TabHeaderProps) => {
           });
         }, 100);
       }}
-      keyExtractor={(item) => item.title}
+      keyExtractor={(item) => item.id}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
     />

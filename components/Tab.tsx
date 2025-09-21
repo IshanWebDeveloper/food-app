@@ -1,14 +1,17 @@
-import { View, Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import React from "react";
 
 interface TabProps {
   title?: string;
   isActive?: boolean;
+  onPress?: () => void;
 }
 
-const Tab = ({ title, isActive }: TabProps) => {
+const Tab = ({ title, isActive, onPress }: TabProps) => {
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={onPress}
       className={`py-[2px] px-4 rounded-2xl border border-gray-200 w-fit h-fit flex justify-center items-center ${isActive ? "bg-primary" : "bg-transparent"}`}
     >
       <Text
@@ -16,7 +19,7 @@ const Tab = ({ title, isActive }: TabProps) => {
       >
         {title}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

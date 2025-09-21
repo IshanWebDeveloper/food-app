@@ -1,6 +1,7 @@
 import AppLogoName from "@/components/AppLogoName";
 import AuthLinearGradientWrapper from "@/components/AuthLinearGradientWrapper";
 import Button from "@/components/Button";
+import GoogleSignInUpButton from "@/components/GoogleSignInUp";
 import TextInput from "@/components/TextInput";
 import { Colors } from "@/constants/Colors";
 import { AuthContext } from "@/context/authContext";
@@ -126,7 +127,8 @@ const SignIn = () => {
           >
             {isSigningIn ? "Signing In..." : "Sign In"}
           </Button>
-
+          {/* Google Sign In */}
+          <GoogleSignInUpButton label="Sign in with Google" />
           <Link
             href="/sign-up"
             className="mt-10 text-center text-lg text-general-200"

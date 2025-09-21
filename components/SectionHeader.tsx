@@ -1,21 +1,19 @@
-import { Text } from "react-native";
-import React from "react";
-import { ThemedView } from "./ThemedView";
+import { Text, View } from "react-native";
+import { memo } from "react";
 
 interface SectionHeaderProps {
   title: string;
   isIcon?: boolean;
-  icon?: React.ReactNode;
 }
 
-const SectionHeader = ({ title, isIcon, icon }: SectionHeaderProps) => {
+const SectionHeader = ({ title, isIcon }: SectionHeaderProps) => {
   return (
-    <ThemedView className="flex-row items-center gap-2  px-4 my-6">
-      {isIcon && icon}
-      <Text className="text-black font-plexSansBold text-lg">{title}</Text>
-      {isIcon && icon}
-    </ThemedView>
+    <View className="flex-row items-center gap-2  bg-light-background2   px-4 my-6">
+      <Text className="text-black dark:text-black font-plexSansBold text-lg">
+        {title}
+      </Text>
+    </View>
   );
 };
 
-export default SectionHeader;
+export default memo(SectionHeader);

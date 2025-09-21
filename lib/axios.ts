@@ -156,7 +156,7 @@ api.interceptors.response.use(
       );
     }
 
-    // If request was already retried -> force logout
+    // if we already tried refresh and it failed, don't try again
     if (originalRequest._retry) {
       await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
@@ -199,7 +199,7 @@ api.interceptors.response.use(
       // clear tokens and call unauthorized handler
       await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
-      // if (unauthorizedHandler) await unauthorizedHandler();
+      if (unauthorizedHandler) await unauthorizedHandler();
       return Promise.reject(refreshErr);
     } finally {
       isRefreshing = false;

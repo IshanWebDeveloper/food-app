@@ -1,7 +1,7 @@
 import { TouchableOpacity } from "react-native";
 import React from "react";
-import { Link, LinkProps } from "expo-router";
-
+import { LinkProps, useNavigation } from "expo-router";
+import { DrawerActions } from "@react-navigation/native";
 interface HeaderNavButtonProps {
   link: LinkProps["href"];
   icon: React.ReactNode;
@@ -9,11 +9,12 @@ interface HeaderNavButtonProps {
 
 const HeaderNavButton = ({ link, icon }: HeaderNavButtonProps) => {
   return (
-    <Link href={link} asChild>
-      <TouchableOpacity className="w-[51px]  h-[40px] rounded items-center justify-center  border border-gray-300 ">
-        {icon}
-      </TouchableOpacity>
-    </Link>
+    <TouchableOpacity
+      className="w-[51px]  h-[40px] rounded items-center justify-center  border border-gray-300 "
+      onPress={() => DrawerActions.toggleDrawer()}
+    >
+      {icon}
+    </TouchableOpacity>
   );
 };
 

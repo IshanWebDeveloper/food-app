@@ -12,7 +12,7 @@ const Header = () => {
         <View className="flex flex-row items-center justify-end flex-1 space-x-6 gap-2">
           <View className="mr-6">
             <HeaderNavButton
-              link="/(protected)/(tabs)/favorites"
+              link="/(protected)/(home)"
               icon={
                 <AntDesign
                   name="search1"
@@ -23,13 +23,13 @@ const Header = () => {
             />
           </View>
           <HeaderNavButton
-            link="/(protected)/(tabs)/home"
+            link="/(protected)/(home)"
             icon={
               <AntDesign name="home" size={18} color={Colors.light.primary} />
             }
           />
           <HeaderNavButton
-            link="/(protected)/(tabs)/test"
+            link="/(protected)/(home)"
             icon={
               <AntDesign name="user" size={18} color={Colors.light.primary} />
             }

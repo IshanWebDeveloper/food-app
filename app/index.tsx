@@ -6,7 +6,7 @@ const Index = () => {
   const { isLoggedIn } = useContext(AuthContext);
 
   if (isLoggedIn) {
-    return <Redirect href="/(protected)/(tabs)/home" />;
+    return <Redirect href="/(protected)/(home)" />;
   }
 
   return <Redirect href="/welcome" />;

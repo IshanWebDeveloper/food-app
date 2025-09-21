@@ -8,13 +8,12 @@ import {
 import { SignInRequest, useUserSignIn } from "@/hooks/api/auth/useSignIn";
 import { useUserSignOut } from "@/hooks/api/auth/useSignOut";
 import { useAuthStore } from "@/hooks/useAuthStore";
-import { getAuthToken, removeAuthToken, saveAuthToken } from "@/lib/authToken";
+import { removeAuthToken, saveAuthToken } from "@/lib/authToken";
 import { AuthTokenType } from "@/types/common";
 import api, { setUnauthorizedHandler } from "@/lib/axios";
 import { ENDPOINTS } from "@/api/api-endpoints";
 import { useDataPreloader } from "@/hooks/useDataPreloader";
 import { queryKeys } from "@/constants/queryKeys";
-import { BaseToast } from "react-native-toast-message";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -41,22 +40,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const { signOut, isPending: isSigningOut } = useUserSignOut();
   const { authState, setAuthState, reset, isReady, setIsLoggedIn, isLoggedIn } =
     useAuthStore();
-  // const { prefetching } = useDataPreloader([
-  //   {
-  //     key: queryKeys.allCategories,
-  //     fetcher: async () => {
-  //       const response = await api.get(ENDPOINTS.CATEGORIES.GET_ALL);
-  //       return response.data;
-  //     },
-  //   },
-  //   {
-  //     key: queryKeys.allFoods,
-  //     fetcher: async () => {
-  //       const response = await api.get(ENDPOINTS.FOODS.GET_ALL);
-  //       return response.data;
-  //     },
-  //   },
-  // ]);
 
   const router = useRouter();
 
@@ -77,7 +60,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         AuthTokenType.REFRESH_TOKEN,
         response.data.data.refreshToken,
       );
-      router.replace("/(protected)/(tabs)/home");
+      router.replace("/(protected)/(home)");
     } catch (error) {
       console.error("Error signing in:", error);
     }
@@ -110,7 +93,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       reset();
       router.replace("/sign-in");
     });
-  }, [reset, router, setIsLoggedIn]);
+  }, [reset, router, setIsLoggedIn, isLoggedIn]);
   useEffect(() => {
     if (isReady) {
       SplashScreen.hideAsync();

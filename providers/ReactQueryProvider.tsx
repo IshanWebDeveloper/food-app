@@ -11,12 +11,12 @@ function makeQueryClient() {
     defaultOptions: {
       queries: {
         queryFn: defaultQueryFn,
-        retry: 1,
-        refetchOnWindowFocus: false,
+        retry: 3,
+        refetchOnWindowFocus: true,
         staleTime: 60 * 1000, // 1 minute
       },
       mutations: {
-        retry: 1,
+        retry: 3,
       },
       dehydrate: {
         serializeData: SuperJson.serialize,

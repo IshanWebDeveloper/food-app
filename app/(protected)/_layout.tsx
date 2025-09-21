@@ -3,8 +3,14 @@ import { Stack } from "expo-router";
 
 const Layout = () => {
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <Stack
+      initialRouteName="(home)"
+      screenOptions={{
+        headerShown: true,
+        headerTransparent: true,
+      }}
+    >
+      <Stack.Screen name="(home)" options={{ headerShown: false }} />
       <Stack.Screen
         name="food/[id]"
         options={{
@@ -27,14 +33,6 @@ const Layout = () => {
           headerRight: () => (
             <AntDesign name="search1" size={24} color="black" />
           ),
-        }}
-      />
-      <Stack.Screen
-        name="payment-success-modal"
-        options={{
-          headerShown: false,
-          presentation: "transparentModal",
-          animation: "fade",
         }}
       />
     </Stack>

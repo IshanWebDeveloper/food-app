@@ -1,6 +1,6 @@
-import { FoodItem } from "@/types/types";
+import { MenuItem } from "@/types/types";
 
-const makeFood = (partial: Partial<FoodItem>): FoodItem => ({
+const makeFood = (partial: Partial<MenuItem>): MenuItem => ({
   id: cryptoRandomId(),
   name: "",
   description: "",
@@ -25,7 +25,7 @@ function cryptoRandomId() {
 export const mockSectionFoodData: {
   title: string;
   icon?: React.ReactNode;
-  data: FoodItem[];
+  data: MenuItem[];
 }[] = [
   { title: "introduction", data: [] },
   {
