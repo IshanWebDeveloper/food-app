@@ -68,7 +68,7 @@ declare interface Restaurant {
   createdAt?: Date;
   updatedAt?: Date;
 }
-declare interface FoodItem {
+declare interface MenuItem {
   id: string;
   name: string;
   description: string;
@@ -84,7 +84,7 @@ declare interface FoodItem {
 }
 
 declare interface OrderItem {
-  food: FoodItem;
+  food: MenuItem;
   quantity: number;
   taxes: number;
   delivery_fee: number;
