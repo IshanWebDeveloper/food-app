@@ -17,19 +17,21 @@ const IncrementDecrement = ({
   onChange,
 }: IncrementDecrementProps) => {
   return (
-    <View className="flex flex-row items-center justify-between w-fit h-fit p-2 border-gray-300 rounded-lg gap-3 ">
+    <View className="flex flex-row items-center  justify-between w-fit h-fit p-2 border-gray-300 rounded-lg gap-3 ">
       <TouchableOpacity
-        className="p-2 bg-[#EF2A39] rounded-xl"
+        className="w-6 h-6 flex flex-col items-center justify-center border-[0.25px] rounded-full"
         onPress={() => onChange?.(Math.max(min, initialValue - step))}
       >
-        <AntDesign name="minus" size={16} color="white" />
+        <AntDesign name="minus" size={16} color="black" />
       </TouchableOpacity>
-      <Text className="text-black font-JakartaExtraBold">{initialValue}</Text>
+      <Text className="text-black mx-6 font-plexSansBold text-2xl">
+        {initialValue}
+      </Text>
       <TouchableOpacity
-        className="p-2 bg-[#EF2A39] rounded-xl"
+        className="w-6 h-6 flex flex-col items-center justify-center border-[0.25px] rounded-full"
         onPress={() => onChange?.(Math.min(max, initialValue + step))}
       >
-        <AntDesign name="plus" size={16} color="white" />
+        <AntDesign name="plus" size={16} color="black" />
       </TouchableOpacity>
     </View>
   );

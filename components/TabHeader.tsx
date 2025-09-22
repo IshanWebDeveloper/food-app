@@ -43,8 +43,6 @@ const TabHeader = ({ focusSection, handleTabPress }: TabHeaderProps) => {
     }
   }, [focusSection, data]);
 
-  if (!data || data?.length === 0) return null;
-
   return (
     <FlatList
       ref={scrollRef}

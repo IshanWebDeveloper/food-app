@@ -1,15 +1,25 @@
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { TopSellingDishReponse } from "@/hooks/api/reports/useGetTopSellingDishes";
-import { ThemedView } from "./ThemedView";
 import { memo } from "react";
+import { useRouter } from "expo-router";
+import { AntDesign } from "@expo/vector-icons";
 
 interface PopularMenuItemProps {
   item: TopSellingDishReponse | null;
 }
 
 const PopularMenuItem = ({ item }: PopularMenuItemProps) => {
+  const router = useRouter();
   return (
-    <ThemedView className="w-[124px] h-fit flex flex-col mt-6 bg-general-200 rounded-[4px] shadow-lg shadow-black/25">
+    <TouchableOpacity
+      onPress={() =>
+        router.push({
+          pathname: "/food/[id]",
+          params: { id: item?.id || "unknown" },
+        })
+      }
+      className="w-[124px] h-fit flex flex-col mt-6 bg-white rounded-[4px] shadow-lg shadow-black/25 relative"
+    >
       <View className="w-full h-fit  relative">
         <Image
           source={{
@@ -50,7 +60,13 @@ const PopularMenuItem = ({ item }: PopularMenuItemProps) => {
           </Text>
         </View>
       </View>
-    </ThemedView>
+      <View
+        className="absolute top-[90px] right-1 bg-white w-11 h-11 rounded-full items-center justify-center shadow-lg shadow-black/25"
+        style={{ elevation: 5 }}
+      >
+        <AntDesign name="plus" size={24} color="#e8ebeb" />
+      </View>
+    </TouchableOpacity>
   );
 };
 
