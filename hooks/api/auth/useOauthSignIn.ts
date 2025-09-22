@@ -6,6 +6,9 @@ import { useMutation } from "@tanstack/react-query";
 
 export interface SignInRequest {
   email: string;
+  name: string;
+  username?: string;
+  image_url?: string;
   password?: string;
   is_Social_login: boolean;
   Social_login_provider?: SocialLoginProvider;
@@ -17,21 +20,21 @@ interface SignInResponse {
   refreshToken: string;
 }
 
-export function useUserSignIn() {
-  const signInMutation = useMutation({
+export function useOauthSignIn() {
+  const oauthSignInMutation = useMutation({
     mutationFn: async (data: SignInRequest) => {
       return await api.post<CommonResponseDataType<SignInResponse>>(
-        ENDPOINTS.AUTH.SIGNIN,
+        ENDPOINTS.AUTH.OAUTH_SIGNIN_GOOGLE,
         data,
       );
     },
   });
 
   return {
-    signIn: signInMutation.mutateAsync,
-    isPending: signInMutation.isPending,
-    isLoaded: signInMutation.isSuccess,
-    isError: signInMutation.isError,
-    error: signInMutation.error,
+    oAuthSignIn: oauthSignInMutation.mutateAsync,
+    isPending: oauthSignInMutation.isPending,
+    isLoaded: oauthSignInMutation.isSuccess,
+    isError: oauthSignInMutation.isError,
+    error: oauthSignInMutation.error,
   };
 }

@@ -14,13 +14,8 @@ const Layout = () => {
       <Stack.Screen
         name="food/[id]"
         options={{
-          headerShown: true,
-          title: "",
-          headerTitleAlign: "center",
-          headerTransparent: true,
-          headerRight: () => (
-            <AntDesign name="search1" size={24} color="black" />
-          ),
+          headerShown: false,
+          presentation: "modal",
         }}
       />
       <Stack.Screen

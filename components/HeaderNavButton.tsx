@@ -1,20 +1,22 @@
-import { TouchableOpacity } from "react-native";
+import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 import React from "react";
-import { LinkProps, useNavigation } from "expo-router";
-import { DrawerActions } from "@react-navigation/native";
+import { Link, LinkProps } from "expo-router";
 interface HeaderNavButtonProps {
   link: LinkProps["href"];
   icon: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
-const HeaderNavButton = ({ link, icon }: HeaderNavButtonProps) => {
+const HeaderNavButton = ({ link, icon, style }: HeaderNavButtonProps) => {
   return (
-    <TouchableOpacity
-      className="w-[51px]  h-[40px] rounded items-center justify-center  border border-gray-300 "
-      onPress={() => DrawerActions.toggleDrawer()}
-    >
-      {icon}
-    </TouchableOpacity>
+    <Link href={link} asChild>
+      <TouchableOpacity
+        className="w-[51px]  h-[40px] rounded items-center justify-center  border border-gray-300"
+        style={style}
+      >
+        {icon}
+      </TouchableOpacity>
+    </Link>
   );
 };
 

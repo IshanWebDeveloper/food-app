@@ -5,7 +5,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import Toast from "react-native-toast-message";
 import {
   IBMPlexSans_100Thin,
   IBMPlexSans_100Thin_Italic,
@@ -76,9 +75,8 @@ export default function Root() {
           Slot renders child routes dynamically
           This includes both (app) and (auth) group routes
         */}
-          <Toast />
-          <StatusBar style="light" translucent />
 
+          <StatusBar style="dark" translucent />
           <Slot />
         </GestureHandlerRootView>
       </AuthProvider>

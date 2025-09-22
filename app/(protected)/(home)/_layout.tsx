@@ -49,10 +49,18 @@ export default function Layout() {
       />
 
       <Stack.Screen
+        name="search"
+        options={{
+          title: "Search",
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
         name="profile"
         options={{
           title: "Profile",
-          headerShown: true,
+          headerShown: false,
           presentation: "transparentModal",
         }}
       />

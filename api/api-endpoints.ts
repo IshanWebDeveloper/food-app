@@ -3,6 +3,7 @@ export const ENDPOINTS = {
   AUTH: {
     SIGNUP: `${BASE_URL}/api/v1/auth/signup`,
     SIGNIN: `${BASE_URL}/api/v1/auth/signin`,
+    OAUTH_SIGNIN_GOOGLE: `${BASE_URL}/api/v1/auth/oauth/google`,
     SIGNOUT: `${BASE_URL}/api/v1/auth/signout`,
     EDIT_PROFILE: (userId: string) =>
       `${BASE_URL}/api/v1/auth/edit-profile/${userId}`,

@@ -5,8 +5,8 @@ import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { footerLinks } from "@/lib/mockData/data";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { Link } from "expo-router";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link, useFocusEffect } from "expo-router";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import {
   Animated,
   Image,
@@ -27,9 +27,22 @@ import PopularMenu from "@/components/PopularMenu";
 
 // Note: Filter items and categories-related state removed as they were unused
 const Home = () => {
-  const { dishesByCategories, isPending } = useGetAllDishesByCategories();
+  const { dishesByCategories, isPending, refetch } =
+    useGetAllDishesByCategories();
   const sectionListRef = useRef<SectionList>(null);
   const scrollY = useRef(new Animated.Value(0)).current;
+
+  useFocusEffect(
+    useCallback(() => {
+      // Reset scroll position when screen is focused
+      refetch();
+      sectionListRef.current?.scrollToLocation({
+        sectionIndex: 0,
+        itemIndex: 0,
+        animated: false,
+      });
+    }, [refetch]),
+  );
 
   const [clickedTabIdx, setClickedTabIdx] = useState<number | null>(null);
   // const headerHeight = useHeaderHeight(); // height of the layout header (unused)
@@ -79,7 +92,7 @@ const Home = () => {
       const candidates = info.viewableItems.filter(
         (v) => v.isViewable && v.item,
       );
-      if (candidates.length) {
+      if (candidates?.length) {
         // Pick the top-most visible item (handle null index)
         const top = candidates.sort(
           (a, b) => ((a.index ?? 0) as number) - ((b.index ?? 0) as number),
@@ -95,6 +108,16 @@ const Home = () => {
   const handleOnClickTabIdx = (idx: number | null) => {
     console.log("Tab clicked, idx:", idx);
   };
+  const sanitizedSections = useMemo(() => {
+    const arr = Array.isArray(dishesByCategories) ? dishesByCategories : [];
+    return arr
+      .filter((s) => s?.title !== "introduction")
+      .map((s) => ({
+        ...s,
+        data: Array.isArray((s as any).data) ? (s as any).data : [],
+        title: s?.title ?? "",
+      }));
+  }, [dishesByCategories]);
 
   if (isPending) {
     return null;
@@ -122,175 +145,171 @@ const Home = () => {
           />
         </Animated.View>
 
-        {dishesByCategories?.length > 0 && (
-          <Animated.SectionList
-            ref={sectionListRef}
-            sections={dishesByCategories.filter(
-              (s) => s.title !== "introduction",
-            )}
-            keyExtractor={(item, number) => keyExtractor(item, number)}
-            stickySectionHeadersEnabled={true}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={contentContainerStyle}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-              { useNativeDriver: true },
-            )}
-            //perf tuning
-            removeClippedSubviews={true}
-            initialNumToRender={60}
-            maxToRenderPerBatch={10}
-            windowSize={10}
-            onScrollToIndexFailed={(info) => {
-              // info has { index, highestMeasuredFrameIndex, averageItemLength }
-              console.warn("Scroll failed:", info);
+        <Animated.SectionList
+          ref={sectionListRef}
+          sections={sanitizedSections ?? []}
+          keyExtractor={(item, number) => keyExtractor(item, number)}
+          stickySectionHeadersEnabled={true}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={contentContainerStyle}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+            { useNativeDriver: true },
+          )}
+          //perf tuning
+          removeClippedSubviews={true}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={10}
+          onScrollToIndexFailed={(info) => {
+            // info has { index, highestMeasuredFrameIndex, averageItemLength }
+            console.warn("Scroll failed:", info);
 
-              // Retry after a short delay with an estimated offset
-              setTimeout(() => {
-                sectionListRef.current?.scrollToLocation({
-                  sectionIndex: info.index, // may need mapping
-                  itemIndex: info.index,
-                  viewOffset: 600,
-                });
-              }, 500);
-            }}
-            updateCellsBatchingPeriod={50}
-            viewabilityConfig={viewabilityConfig}
-            onViewableItemsChanged={onViewableItemsChanged}
-            // Higher value for smoother tracking, at cost of some performance
-            scrollEventThrottle={16}
-            ListHeaderComponent={
-              <>
-                {/* Restaurant cover image */}
-                <ThemedView className="w-full h-[270px] mb-4 relative dark:bg-white">
-                  <Image
-                    source={{
-                      uri: "https://rs-menus-api.roocdn.com/images/dd4dceb1-a8c3-45ac-8560-3d9c7cbbad22/image.jpeg?width=812.0000120997429&height=456.0000067949295&auto=webp&format=jpg&fit=crop",
-                    }}
-                    className="w-full h-full "
-                    resizeMode="cover"
-                  />
-                  {/* Start group order button */}
-                  <Link href="/(protected)/(home)" asChild>
-                    <TouchableOpacity className="absolute bottom-4 right-0 px-4 py-2 rounded-full w-[200px] h-fit flex-row items-center space-x-2">
-                      <ThemedView className="  flex-1 flex-row items-center p-2 gap-2">
+            // Retry after a short delay with an estimated offset
+            setTimeout(() => {
+              sectionListRef.current?.scrollToLocation({
+                sectionIndex: info.index, // may need mapping
+                itemIndex: info.index,
+                viewOffset: 600,
+              });
+            }, 500);
+          }}
+          updateCellsBatchingPeriod={50}
+          viewabilityConfig={viewabilityConfig}
+          onViewableItemsChanged={onViewableItemsChanged}
+          // Higher value for smoother tracking, at cost of some performance
+          scrollEventThrottle={16}
+          ListHeaderComponent={
+            <>
+              {/* Restaurant cover image */}
+              <ThemedView className="w-full h-[270px] mb-4 relative dark:bg-white">
+                <Image
+                  source={{
+                    uri: "https://rs-menus-api.roocdn.com/images/dd4dceb1-a8c3-45ac-8560-3d9c7cbbad22/image.jpeg?width=812.0000120997429&height=456.0000067949295&auto=webp&format=jpg&fit=crop",
+                  }}
+                  className="w-full h-full "
+                  resizeMode="cover"
+                />
+                {/* Start group order button */}
+                <Link href="/(protected)/(home)" asChild>
+                  <TouchableOpacity className="absolute bottom-4 right-0 px-4 py-2 rounded-full w-[200px] h-fit flex-row items-center space-x-2">
+                    <ThemedView className="  flex-1 flex-row items-center p-2 gap-2">
+                      <AntDesign
+                        name="addusergroup"
+                        size={16}
+                        color={Colors.light.primary}
+                      />
+                      <ThemedText className=" text-base font-plexSans text-center">
+                        Start Group Order
+                      </ThemedText>
+                    </ThemedView>
+                  </TouchableOpacity>
+                </Link>
+              </ThemedView>
+
+              {/* Details Container */}
+              <ThemedView className="flex-col ">
+                {/* Title and rating */}
+                <View className="px-4">
+                  <Text className="text-[28px] font-plexSansBold text-black">
+                    Tossed - St Martin's Lane
+                  </Text>
+                  <ThemedView className="flex-col gap-1  mt-1">
+                    <Text className="text-base font-plexSans text-black">
+                      10 - 20 min • Halal • Salads • Healthy
+                    </Text>
+                    <Text className="text-base font-plexSans max-w-[80%] text-black">
+                      0.20 miles away • Closes at 21:00 • E8.00 minimum •
+                      <Text> EO.49 delivery</Text>
+                    </Text>
+                  </ThemedView>
+                  <ThemedView className="flex-col gap-1 mt-2">
+                    <DetailsCardNav
+                      link="/(protected)/(home)"
+                      title="Info"
+                      subtitle="Map, allergens and hygiene rating"
+                      icon={
                         <AntDesign
-                          name="addusergroup"
-                          size={16}
-                          color={Colors.light.primary}
+                          name="infocirlceo"
+                          size={24}
+                          color={Colors.light.tabIconDefault}
                         />
-                        <ThemedText className=" text-base font-plexSans text-center">
-                          Start Group Order
-                        </ThemedText>
-                      </ThemedView>
-                    </TouchableOpacity>
-                  </Link>
-                </ThemedView>
-
-                {/* Details Container */}
-                <ThemedView className="flex-col ">
-                  {/* Title and rating */}
-                  <View className="px-4">
-                    <Text className="text-[28px] font-plexSansBold text-black">
-                      Tossed - St Martin's Lane
-                    </Text>
-                    <ThemedView className="flex-col gap-1  mt-1">
-                      <Text className="text-base font-plexSans text-black">
-                        10 - 20 min • Halal • Salads • Healthy
-                      </Text>
-                      <Text className="text-base font-plexSans max-w-[80%] text-black">
-                        0.20 miles away • Closes at 21:00 • E8.00 minimum •
-                        <Text> EO.49 delivery</Text>
-                      </Text>
-                    </ThemedView>
-                    <ThemedView className="flex-col gap-1 mt-2">
-                      <DetailsCardNav
-                        link="/(protected)/(home)"
-                        title="Info"
-                        subtitle="Map, allergens and hygiene rating"
-                        icon={
-                          <AntDesign
-                            name="infocirlceo"
-                            size={24}
-                            color={Colors.light.tabIconDefault}
-                          />
-                        }
-                      />
-                      <DetailsCardNav
-                        link="/(protected)/(home)"
-                        title="4.8 Excellent"
-                        subtitle="See all 500 reviews"
-                        icon={
-                          <AntDesign
-                            name="star"
-                            size={20}
-                            color={Colors.light.green}
-                          />
-                        }
-                      />
-                      <DetailsCardNav
-                        link="/(protected)/(home)"
-                        title="Deliver in 10 - 20 min"
-                        isItChanged
-                        icon={
-                          <Image
-                            source={require("../../../assets/images/delivery_rider.png")}
-                            className="w-6 h-6"
-                          />
-                        }
-                      />
-                    </ThemedView>
-                  </View>
-                  {/* Inline sticky bar; measured and hidden once pinned */}
-                  <Animated.View
-                    className={"bg-white pt-2 pb-1 border-b border-gray-200"}
-                    style={{ opacity: inlineOpacity }}
-                  >
-                    <TabHeader
-                      focusSection={focused?.sectionTitle}
-                      handleTabPress={handleOnClickTabIdx}
+                      }
                     />
-                  </Animated.View>
-                  <View className="flex-col px-4 py-4 bg-light-background2 ">
-                    <Text className="text-black text-sm font-plexSans">
-                      Adults need around 2000 kcal a day
-                    </Text>
-                    <Text className="text-black text-lg font-plexSansBold mt-6">
-                      40% off selected items
-                    </Text>
-                    <Text className="text-black text-base font-plexSans mt-1 w-[90%]">
-                      Spend £10.00, get 40% off selected items – T&Cs apply. New
-                      customers only.
-                    </Text>
-                    <PromotionalCard />
-                    <PopularMenu />
-                  </View>
-                </ThemedView>
-              </>
-            }
-            renderItem={({ item, section }) => (
-              <MenuItemCard data={item} sectionTitle={section.title} />
-            )}
-            renderSectionHeader={({ section }) => {
-              const title = section.title;
-              if (!title) return null;
-              return <SectionHeader title={title} isIcon={!!section.icon} />;
-            }}
-            // Ensures the section header doesn't overlap content
-            // when using sticky headers
-
-            ListFooterComponent={
-              <>
-                <View className="w-full h-full bg-light-footerOuterColor dark:bg-dark-footerOuterColor p-4 flex-col gap-4">
-                  {footerLinks.map((item, index) => (
-                    <FooterItemContainer key={index} item={item} />
-                  ))}
+                    <DetailsCardNav
+                      link="/(protected)/(home)"
+                      title="4.8 Excellent"
+                      subtitle="See all 500 reviews"
+                      icon={
+                        <AntDesign
+                          name="star"
+                          size={20}
+                          color={Colors.light.green}
+                        />
+                      }
+                    />
+                    <DetailsCardNav
+                      link="/(protected)/(home)"
+                      title="Deliver in 10 - 20 min"
+                      isItChanged
+                      icon={
+                        <Image
+                          source={require("../../../assets/images/delivery_rider.png")}
+                          className="w-6 h-6"
+                        />
+                      }
+                    />
+                  </ThemedView>
                 </View>
-                {/* paddingBottom: 100, --- IGNORE --- */}
-              </>
-            }
-          />
-        )}
+                {/* Inline sticky bar; measured and hidden once pinned */}
+                <Animated.View
+                  className={"bg-white pt-2 pb-1 border-b border-gray-200"}
+                  style={{ opacity: inlineOpacity }}
+                >
+                  <TabHeader
+                    focusSection={focused?.sectionTitle}
+                    handleTabPress={handleOnClickTabIdx}
+                  />
+                </Animated.View>
+                <View className="flex-col px-4 py-4 bg-light-background2 ">
+                  <Text className="text-black text-sm font-plexSans">
+                    Adults need around 2000 kcal a day
+                  </Text>
+                  <Text className="text-black text-lg font-plexSansBold mt-6">
+                    40% off selected items
+                  </Text>
+                  <Text className="text-black text-base font-plexSans mt-1 w-[90%]">
+                    Spend £10.00, get 40% off selected items – T&Cs apply. New
+                    customers only.
+                  </Text>
+                  <PromotionalCard />
+                  <PopularMenu />
+                </View>
+              </ThemedView>
+            </>
+          }
+          renderItem={({ item, section }) => (
+            <MenuItemCard data={item} sectionTitle={section.title} />
+          )}
+          renderSectionHeader={({ section }) => {
+            const title = section.title;
+            if (!title) return null;
+            return <SectionHeader title={title} isIcon={!!section.icon} />;
+          }}
+          // Ensures the section header doesn't overlap content
+          // when using sticky headers
+
+          ListFooterComponent={
+            <>
+              <View className="w-full h-full bg-light-footerOuterColor dark:bg-dark-footerOuterColor p-4 flex-col gap-4">
+                {footerLinks.map((item, index) => (
+                  <FooterItemContainer key={index} item={item} />
+                ))}
+              </View>
+              {/* paddingBottom: 100, --- IGNORE --- */}
+            </>
+          }
+        />
       </View>
     </SafeAreaView>
   );

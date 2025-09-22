@@ -1,6 +1,7 @@
 import { Image, Text, View } from "react-native";
 import { TopSellingDishReponse } from "@/hooks/api/reports/useGetTopSellingDishes";
 import { ThemedView } from "./ThemedView";
+import { memo } from "react";
 
 interface PopularMenuItemProps {
   item: TopSellingDishReponse | null;
@@ -35,7 +36,7 @@ const PopularMenuItem = ({ item }: PopularMenuItemProps) => {
             ellipsizeMode="tail"
             className=" font-plexSans text-xs  text-gray-500 "
           >
-            217 kcal
+            {item?.calories} kcal
           </Text>
           <Text
             numberOfLines={2}
@@ -53,4 +54,4 @@ const PopularMenuItem = ({ item }: PopularMenuItemProps) => {
   );
 };
 
-export default PopularMenuItem;
+export default memo(PopularMenuItem);

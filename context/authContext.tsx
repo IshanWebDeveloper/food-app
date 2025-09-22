@@ -11,9 +11,7 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 import { removeAuthToken, saveAuthToken } from "@/lib/authToken";
 import { AuthTokenType } from "@/types/common";
 import api, { setUnauthorizedHandler } from "@/lib/axios";
-import { ENDPOINTS } from "@/api/api-endpoints";
-import { useDataPreloader } from "@/hooks/useDataPreloader";
-import { queryKeys } from "@/constants/queryKeys";
+import { ToastAndroid } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -60,9 +58,17 @@ export function AuthProvider({ children }: PropsWithChildren) {
         AuthTokenType.REFRESH_TOKEN,
         response.data.data.refreshToken,
       );
+      api.defaults.headers.common["Authorization"] =
+        `Bearer ${response.data.data.accessToken}`;
+      ToastAndroid.show("Sign in successful", ToastAndroid.SHORT);
       router.replace("/(protected)/(home)");
     } catch (error) {
-      console.error("Error signing in:", error);
+      console.error("Sign-in error:", error);
+      ToastAndroid.showWithGravity(
+        "Failed to sign in. Please check your credentials and try again.",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
     }
   };
 
@@ -73,9 +79,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
       await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
       reset();
-      router.replace("/welcome");
+      router.replace("/sign-in");
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error(error);
+      ToastAndroid.showWithGravity(
+        "Error signing out. Please try again.",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+      );
       await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
       setIsLoggedIn(false);

@@ -66,7 +66,7 @@ api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     try {
       const token = await getAuthToken(AuthTokenType.ACCESS_TOKEN);
-      if (token && typeof token === "string" && token.trim().length > 0) {
+      if (token && typeof token === "string" && token.trim()?.length > 0) {
         config.headers = config.headers ?? {};
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -96,19 +96,17 @@ export const refreshAccessToken = async (): Promise<string> => {
 
   // accept multiple possible response shapes
   const d = response.data ?? {};
-  const newAccessToken =
-    d.accessToken ?? d.access_token ?? d.token ?? d.access ?? null;
-  const newRefreshToken = d.refreshToken ?? d.refresh_token ?? null;
+  const newAccessToken = d.accessToken ?? null;
+  const newRefreshToken = d.refreshToken ?? null;
 
-  if (!newAccessToken || typeof newAccessToken !== "string") {
+  if (!newAccessToken) {
     throw new Error("No access token in refresh response");
   }
 
   // save tokens
   await saveAuthToken(AuthTokenType.ACCESS_TOKEN, newAccessToken);
-  if (newRefreshToken && typeof newRefreshToken === "string") {
-    await saveAuthToken(AuthTokenType.REFRESH_TOKEN, newRefreshToken);
-  }
+
+  await saveAuthToken(AuthTokenType.REFRESH_TOKEN, newRefreshToken);
 
   // update default header for future requests
   api.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
@@ -142,6 +140,7 @@ api.interceptors.response.use(
       url.includes("/signin") ||
       url.includes("/signup") ||
       url.includes("/signout") ||
+      url.includes(ENDPOINTS.AUTH.OAUTH_SIGNIN_GOOGLE) ||
       url.includes(ENDPOINTS.AUTH.REFRESH_TOKEN)
     ) {
       return Promise.reject(

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQueryClient, QueryKey, QueryFunction } from "@tanstack/react-query";
+import { ToastAndroid } from "react-native";
 
 /**
  * useDataPreloader
@@ -38,6 +39,10 @@ export function useDataPreloader(queries: PreloadQuery[]): {
     )
       .catch((err) => {
         console.error("Error prefetching data:", err);
+        ToastAndroid.show(
+          "Failed to prefetch data. Please try again.",
+          ToastAndroid.SHORT,
+        );
       })
       .finally(() => {
         setPrefetching(false);

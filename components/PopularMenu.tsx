@@ -9,14 +9,10 @@ const PopularMenu = () => {
     limit: 5,
     status: OrderStatus.DELIVERED,
     metric: "quantity",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
-      .toISOString()
-      .split("T")[0],
+    startDate: "2025-09-22",
+    endDate: "2025-09-23",
   });
-  if (isPending) {
-    return null;
-  }
+
   return (
     <View className="w-full h-fit flex flex-col my-6  ">
       <Text className="text-lg font-plexSansBold">
@@ -27,7 +23,7 @@ const PopularMenu = () => {
         showsHorizontalScrollIndicator={false}
         contentContainerClassName="space-x-4 py-2"
         ItemSeparatorComponent={() => <View className="w-4" />}
-        keyExtractor={(item, index) => `popular-menu-item-${item.id}-${index}`}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
         data={topSellingDishes?.data}
         renderItem={({ item }) => <PopularMenuItem item={item} />}
       />

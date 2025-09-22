@@ -3,6 +3,12 @@ export type CommonResponseDataType<T> = {
   data: T;
 };
 
+export enum SocialLoginProvider {
+  GOOGLE = "GOOGLE",
+  FACEBOOK = "FACEBOOK",
+  APPLE = "APPLE",
+}
+
 export enum AuthTokenType {
   ACCESS_TOKEN = "accessToken",
   REFRESH_TOKEN = "refreshToken",

@@ -33,9 +33,13 @@ export function useGetAllDishesByCategories() {
       );
       return response.data;
     },
-    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retryOnMount: true,
+    refetchInterval: 2 * 60 * 1000, // 2 minutes
+    refetchIntervalInBackground: true, // 30 minutes
+    refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 
   return {
