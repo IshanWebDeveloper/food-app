@@ -12,6 +12,9 @@ import { removeAuthToken, saveAuthToken } from "@/lib/authToken";
 import { AuthTokenType } from "@/types/common";
 import api, { setUnauthorizedHandler } from "@/lib/axios";
 import { ToastAndroid } from "react-native";
+import { QueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/constants/queryKeys";
+import { fetchAllDishesByCategories } from "@/hooks/api/dishes/useGetDishesByCategories";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,6 +43,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     useAuthStore();
 
   const router = useRouter();
+  const query = new QueryClient();
 
   const handleSignIn = async (data: SignInRequest) => {
     try {
@@ -61,6 +65,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
       api.defaults.headers.common["Authorization"] =
         `Bearer ${response.data.data.accessToken}`;
       ToastAndroid.show("Sign in successful", ToastAndroid.SHORT);
+      query.prefetchQuery({
+        queryKey: [queryKeys.allDishesByCategories],
+        queryFn: fetchAllDishesByCategories,
+      });
       router.replace("/(protected)/(home)");
     } catch (error) {
       console.error("Sign-in error:", error);
