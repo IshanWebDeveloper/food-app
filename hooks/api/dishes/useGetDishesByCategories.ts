@@ -24,26 +24,26 @@ interface Dish {
   category_id: string;
   restaurant_id: string;
 }
+
+export const fetchAllDishesByCategories = async () => {
+  const response = await api.get<getAllDishesByCategoriesResponse>(
+    ENDPOINTS.dishes.GET_ALL_BY_CATEGORIES,
+  );
+  return response.data;
+};
 export function useGetAllDishesByCategories() {
   const getAllDishesByCategories = useQuery({
     queryKey: queryKeys.allDishesByCategories,
-    queryFn: async () => {
-      const response = await api.get<getAllDishesByCategoriesResponse>(
-        ENDPOINTS.dishes.GET_ALL_BY_CATEGORIES,
-      );
-      return response.data;
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retryOnMount: true,
-    refetchInterval: 2 * 60 * 1000, // 2 minutes
+    queryFn: fetchAllDishesByCategories,
+    staleTime: 1 * 60 * 1000, // 5 minutes
+    refetchInterval: 60 * 1000, // 1 minute
     refetchIntervalInBackground: true, // 30 minutes
     refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
     refetchOnMount: true,
   });
 
   return {
-    dishesByCategories: [...(getAllDishesByCategories.data?.data || [])],
+    dishesByCategories: getAllDishesByCategories.data?.data || [],
     refetch: getAllDishesByCategories.refetch,
     isPending: getAllDishesByCategories.isLoading,
     isLoaded: getAllDishesByCategories.isSuccess,

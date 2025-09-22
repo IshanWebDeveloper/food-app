@@ -5,4 +5,19 @@ export const queryKeys = {
   dishById: (id: string) => ["dishById", id],
   allDishesByCategories: ["allDishesByCategories"],
   dishesByCategory: (categoryId: string) => ["dishesByCategory", categoryId],
+  // Reports / Analytics
+  topSellingDishes: (params: {
+    status: string;
+    metric: string;
+    startDate: string;
+    endDate: string;
+    limit?: number;
+  }) => [
+    "topSellingDishes",
+    params.status,
+    params.metric,
+    params.startDate,
+    params.endDate,
+    params.limit ?? "no-limit",
+  ],
 };

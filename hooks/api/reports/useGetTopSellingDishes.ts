@@ -19,7 +19,7 @@ export interface TopSellingDishReponse extends MenuItem {
 
 export function useGetTopSellingDishes(params: QueryParams) {
   const getTopSellingDishes = useQuery({
-    queryKey: queryKeys.allDishesByCategories,
+    queryKey: queryKeys.topSellingDishes(params),
     queryFn: async () => {
       const response = await api.get<
         CommonResponseDataType<TopSellingDishReponse[]>
@@ -29,14 +29,14 @@ export function useGetTopSellingDishes(params: QueryParams) {
 
       return response.data;
     },
-
+    refetchInterval: 5000, // 5 seconds
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
     refetchOnMount: true,
   });
 
   return {
-    topSellingDishes: getTopSellingDishes.data,
+    topSellingDishes: getTopSellingDishes.data?.data,
     refetch: getTopSellingDishes.refetch,
     isPending: getTopSellingDishes.isLoading,
     isLoaded: getTopSellingDishes.isSuccess,
