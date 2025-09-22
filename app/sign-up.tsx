@@ -77,8 +77,13 @@ const SignUp = () => {
       if (response.status === 201) {
         Alert.alert("Success", "Account created successfully!");
       }
-      await handleSignIn({ email: data.email, password: data.password });
-      router.replace("/(protected)/(tabs)/home");
+      await handleSignIn({
+        email: data.email,
+        password: data.password,
+        is_Social_login: false,
+        Social_login_provider: undefined,
+      });
+      router.replace("/(protected)/(home)");
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
