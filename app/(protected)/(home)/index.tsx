@@ -5,8 +5,8 @@ import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { footerLinks } from "@/lib/mockData/data";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { Link, useFocusEffect } from "expo-router";
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { Link } from "expo-router";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   Animated,
   Image,
@@ -24,27 +24,24 @@ import MenuItemCard from "@/components/MenuItemCard";
 import { useGetAllDishesByCategories } from "@/hooks/api/dishes/useGetDishesByCategories";
 import { ThemedText } from "@/components/ThemedText";
 import PopularMenu from "@/components/PopularMenu";
+import { OrderStatus } from "@/types/common";
+import { useGetTopSellingDishes } from "@/hooks/api/reports/useGetTopSellingDishes";
 
 // Note: Filter items and categories-related state removed as they were unused
 const Home = () => {
-  const { dishesByCategories, isPending, refetch } =
-    useGetAllDishesByCategories();
+  const { dishesByCategories, isPending } = useGetAllDishesByCategories();
+
+  const { topSellingDishes } = useGetTopSellingDishes({
+    limit: 5,
+    status: OrderStatus.DELIVERED,
+    metric: "quantity",
+    startDate: new Date().toISOString().split("T")[0], // Today's date in YYYY-MM-DD format
+    endDate: new Date("2025-09-23").toISOString().split("T")[0], // Today's date in YYYY-MM-DD format
+  });
   const sectionListRef = useRef<SectionList>(null);
   const scrollY = useRef(new Animated.Value(0)).current;
 
-  useFocusEffect(
-    useCallback(() => {
-      // Reset scroll position when screen is focused
-      refetch();
-      sectionListRef.current?.scrollToLocation({
-        sectionIndex: 0,
-        itemIndex: 0,
-        animated: false,
-      });
-    }, [refetch]),
-  );
-
-  const [clickedTabIdx, setClickedTabIdx] = useState<number | null>(null);
+  // const [clickedTabIdx, setClickedTabIdx] = useState<number | null>(null);
   // const headerHeight = useHeaderHeight(); // height of the layout header (unused)
   // const [inlineBarY, setInlineBarY] = useState(0); // measured but not used currently
   const [focused, setFocused] = useState<{
@@ -109,6 +106,7 @@ const Home = () => {
     console.log("Tab clicked, idx:", idx);
   };
   const sanitizedSections = useMemo(() => {
+    if (!dishesByCategories) return [];
     const arr = Array.isArray(dishesByCategories) ? dishesByCategories : [];
     return arr
       .filter((s) => s?.title !== "introduction")
@@ -147,7 +145,7 @@ const Home = () => {
 
         <Animated.SectionList
           ref={sectionListRef}
-          sections={sanitizedSections ?? []}
+          sections={sanitizedSections}
           keyExtractor={(item, number) => keyExtractor(item, number)}
           stickySectionHeadersEnabled={true}
           showsVerticalScrollIndicator={false}
@@ -283,7 +281,9 @@ const Home = () => {
                     customers only.
                   </Text>
                   <PromotionalCard />
-                  <PopularMenu />
+                  {topSellingDishes && (
+                    <PopularMenu dishes={topSellingDishes} />
+                  )}
                 </View>
               </ThemedView>
             </>
@@ -314,4 +314,4 @@ const Home = () => {
     </SafeAreaView>
   );
 };
-export default memo(Home);
+export default Home;

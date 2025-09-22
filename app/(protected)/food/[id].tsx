@@ -1,4 +1,4 @@
-import { Image, Text, View } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useGetDishById } from "@/hooks/api/dishes/useGetDishById";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -6,6 +6,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Button from "@/components/Button";
 import { useState } from "react";
 import IncrementDecrement from "@/components/IncrementDecrement";
+import { Colors } from "@/constants/Colors";
 
 const FoodDetail = () => {
   const { id } = useLocalSearchParams();
@@ -24,25 +25,36 @@ const FoodDetail = () => {
     );
   }
   return (
-    <SafeAreaView className="flex-1 flex-col  bg-white ">
+    <SafeAreaView className="flex-1 flex-col  bg-white relative ">
       {/* Image container */}
-      <View className="flex-1 flex-col gap-[90px] relative">
-        <View className="w-full h-64 mt-20 items-center justify-center bg-general-300">
+      <ScrollView className="flex-1 flex-col  relative">
+        <View className="w-full h-[283px]  items-center justify-center bg-general-300 relative">
           <Image
-            source={require(
-              `../../../assets/images/foods/cheeseburger_wendy_burger.png`,
-            )}
-            className="aspect-w-1 h-[400px] rounded-lg"
-            resizeMode="contain"
+            source={{
+              uri: "https://rs-menus-api.roocdn.com/images/a19b0302-e9c1-409c-a206-c786f64e825c/image.jpeg?width=852.0000126957893&height=568.0000084638596&auto=webp&format=jpg&fit=crop",
+            }}
+            className="w-full h-full"
+            resizeMode="cover"
+            resizeMethod="resize"
           />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="absolute top-2 right-3 bg-white w-12 h-12 rounded-full items-center justify-center shadow-lg shadow-black/25"
+            style={{ elevation: 5 }}
+          >
+            <AntDesign name="close" size={24} color={Colors.light.primary} />
+          </TouchableOpacity>
         </View>
         <View className="p-5">
-          <Text className="text-2xl font-bold mb-2">
+          <Text className="text-xl font-plexSansBold mb-2">
             {dish?.name || "Unknown Food Item"}
           </Text>
           <Text className=" flex flex-row items-center">
-            <AntDesign name="star" size={16} color="gold" />
-            <Text className="text-[#808080]"> {dish?.rating || "N/A"} --</Text>
+            <AntDesign name="star" size={16} color="#4d7c1b" />
+            <Text className="text-[#808080]">
+              {" "}
+              {dish?.rating_description || "N/A"} --
+            </Text>
             <Text className="text-[#808080]">
               {" "}
               {dish?.preparation_time || "N/A"} mins
@@ -51,29 +63,51 @@ const FoodDetail = () => {
           <Text className="text-medium leading-[27px] text-[#6A6A6A] mb-4">
             {dish?.description || "No description available."}
           </Text>
-          <View className="px-5 w-[150px] self-end">
-            <Text className="text-lg font-bold ">Quantity</Text>
-            <IncrementDecrement initialValue={portion} onChange={setPortion} />
-          </View>
         </View>
-        {/* Portion size select */}
-        {/* Price  & Order container */}
-        <View className="flex flex-row items-center justify-between px-5 gap-12 absolute bottom-5 w-full pb-5 bg-white">
-          <View className="p-5 bg-[#EF2A39]  elevation shadow-black/25 rounded-[20px] w-[120px]">
-            <Text className="text-[22px] font-bold text-center text-white font-JakartaMedium">
-              ${((dish?.price || 0) * portion).toFixed(2)}
+        <View className="p-4 border-[0.25px] m-4 rounded-md flex flex-col items-start   flex-wrap">
+          <View className="flex flex-row items-center  gap-2">
+            <Text className="text-sm font-plexSans">Contains</Text>
+            <Text className="text-sm mr-2 font-plexSansBold ">
+              {dish?.ingredients.split(" ").join(", ") || "N/A"}
             </Text>
           </View>
-          <Button
-            className="flex-1 "
-            style={{ backgroundColor: "black" }}
-            onPress={handleOrderNowPress}
-          >
-            <Text className="text-white text-[18px] font-JakartaMedium">
-              Order Now
+          <Text className="w-full  flex flex-row    flex-wrap">
+            <Text className="text-sm font-plexSans pr-1 ">
+              Questions about allergens, ingredients or cooking methods?
             </Text>
-          </Button>
+
+            <Text className="text-sm pl-1 font-plexSans color-primary underline ">
+              {" "}
+              Please contact the restaurant directly.
+            </Text>
+          </Text>
         </View>
+      </ScrollView>
+      {/* Sticky footer */}
+      <View className="w-full p-4 flex flex-col items-center justify-center bg-white border-t-[0.5px] border-t-gray-300 ">
+        <IncrementDecrement
+          initialValue={portion}
+          max={10}
+          min={1}
+          onChange={setPortion}
+        />
+        <Button
+          style={{
+            height: 50,
+            backgroundColor: Colors.light.primary,
+            borderRadius: 8,
+          }}
+          onPress={handleOrderNowPress}
+          className="w-full mt-4"
+        >
+          <Text className="text-white font-plexSansBold text-lg">
+            Add for{" "}
+            {((dish?.price || 0) * portion).toLocaleString("en-GB", {
+              style: "currency",
+              currency: "GBP",
+            })}
+          </Text>
+        </Button>
       </View>
     </SafeAreaView>
   );
