@@ -8,6 +8,7 @@ import axios, {
 import { ENDPOINTS } from "../api/api-endpoints";
 import { AuthTokenType, CommonResponseDataType } from "@/types/common";
 import { getAuthToken, removeAuthToken, saveAuthToken } from "./authToken";
+import { ToastAndroid } from "react-native";
 
 // ---- augment axios config to hold a retry flag ----
 declare module "axios" {
@@ -129,6 +130,11 @@ api.interceptors.response.use(
           new Error("Request timed out. Please try again."),
         );
       }
+      ToastAndroid.showWithGravity(
+        "Network error. Check your internet connection.",
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+      );
       return Promise.reject(
         new Error("Network error. Check your internet connection."),
       );
