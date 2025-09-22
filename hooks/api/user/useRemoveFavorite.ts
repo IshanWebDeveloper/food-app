@@ -14,7 +14,7 @@ export function useRemoveFromFavorites() {
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.userFavoriteFoods, queryKeys.allFoods],
+        queryKey: [queryKeys.userFavoriteFoods, queryKeys.allDishes],
       });
     },
   });

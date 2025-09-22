@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useReducer } from "react";
 import * as SecureStore from "expo-secure-store";
-import { Platform } from "react-native";
+import { Platform, ToastAndroid } from "react-native";
 
 type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];
 
@@ -26,6 +26,10 @@ export async function setStorageItemAsync(key: string, value: string | null) {
       }
     } catch (e) {
       console.error("Local storage is unavailable:", e);
+      ToastAndroid.show(
+        "Failed to access local storage. Please try again.",
+        ToastAndroid.SHORT,
+      );
     }
   } else {
     if (value == null) {

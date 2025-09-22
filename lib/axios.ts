@@ -2,12 +2,13 @@
 import axios, {
   AxiosError,
   AxiosRequestConfig,
-  InternalAxiosRequestConfig
+  InternalAxiosRequestConfig,
 } from "axios";
 
 import { ENDPOINTS } from "../api/api-endpoints";
 import { AuthTokenType, CommonResponseDataType } from "@/types/common";
 import { getAuthToken, removeAuthToken, saveAuthToken } from "./authToken";
+import { ToastAndroid } from "react-native";
 
 // ---- augment axios config to hold a retry flag ----
 declare module "axios" {
@@ -28,9 +29,9 @@ const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   },
-  timeout: 30000
+  timeout: 30000,
 });
 
 // authApi: used ONLY for token refresh calls (no request interceptor)
@@ -38,9 +39,9 @@ const authApi = axios.create({
   baseURL: BASE_URL,
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   },
-  timeout: 30000
+  timeout: 30000,
 });
 
 // refresh flow state
@@ -66,7 +67,7 @@ api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     try {
       const token = await getAuthToken(AuthTokenType.ACCESS_TOKEN);
-      if (token && typeof token === "string" && token.trim().length > 0) {
+      if (token && typeof token === "string" && token.trim()?.length > 0) {
         config.headers = config.headers ?? {};
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -77,7 +78,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (err) => Promise.reject(err)
+  (err) => Promise.reject(err),
 );
 
 // Helper: perform refresh using authApi (no auth header attached)
@@ -89,24 +90,24 @@ export const refreshAccessToken = async (): Promise<string> => {
 
   // POST to refresh endpoint using authApi so it uses baseURL and no auth header
   const response = await authApi.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {
-    refresh_token: refreshToken
+    refresh_token: refreshToken,
   });
+
+  console.log("Refresh response:", response.data);
 
   // accept multiple possible response shapes
   const d = response.data ?? {};
-  const newAccessToken =
-    d.accessToken ?? d.access_token ?? d.token ?? d.access ?? null;
-  const newRefreshToken = d.refreshToken ?? d.refresh_token ?? null;
+  const newAccessToken = d.accessToken ?? null;
+  const newRefreshToken = d.refreshToken ?? null;
 
-  if (!newAccessToken || typeof newAccessToken !== "string") {
+  if (!newAccessToken) {
     throw new Error("No access token in refresh response");
   }
 
   // save tokens
   await saveAuthToken(AuthTokenType.ACCESS_TOKEN, newAccessToken);
-  if (newRefreshToken && typeof newRefreshToken === "string") {
-    await saveAuthToken(AuthTokenType.REFRESH_TOKEN, newRefreshToken);
-  }
+
+  await saveAuthToken(AuthTokenType.REFRESH_TOKEN, newRefreshToken);
 
   // update default header for future requests
   api.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
@@ -126,11 +127,16 @@ api.interceptors.response.use(
     if (!error.response) {
       if (error.code === "ECONNABORTED") {
         return Promise.reject(
-          new Error("Request timed out. Please try again.")
+          new Error("Request timed out. Please try again."),
         );
       }
+      ToastAndroid.showWithGravity(
+        "Network error. Check your internet connection.",
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+      );
       return Promise.reject(
-        new Error("Network error. Check your internet connection.")
+        new Error("Network error. Check your internet connection."),
       );
     }
 
@@ -140,27 +146,28 @@ api.interceptors.response.use(
       url.includes("/signin") ||
       url.includes("/signup") ||
       url.includes("/signout") ||
+      url.includes(ENDPOINTS.AUTH.OAUTH_SIGNIN_GOOGLE) ||
       url.includes(ENDPOINTS.AUTH.REFRESH_TOKEN)
     ) {
       return Promise.reject(
-        (error.response.data as CommonResponseDataType<unknown>) ?? error
+        (error.response.data as CommonResponseDataType<unknown>) ?? error,
       );
     }
 
     // non-401 => propagate backend payload
     if (error.response.status !== 401 || !originalRequest) {
       return Promise.reject(
-        (error.response.data as CommonResponseDataType<unknown>) ?? error
+        (error.response.data as CommonResponseDataType<unknown>) ?? error,
       );
     }
 
-    // If request was already retried -> force logout
+    // if we already tried refresh and it failed, don't try again
     if (originalRequest._retry) {
       await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
-      if (unauthorizedHandler) await unauthorizedHandler();
+      // if (unauthorizedHandler) await unauthorizedHandler();
       return Promise.reject(
-        (error.response.data as CommonResponseDataType<unknown>) ?? error
+        (error.response.data as CommonResponseDataType<unknown>) ?? error,
       );
     }
 
@@ -202,7 +209,7 @@ api.interceptors.response.use(
     } finally {
       isRefreshing = false;
     }
-  }
+  },
 );
 
 export default api;

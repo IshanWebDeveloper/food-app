@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export interface GetAllCategoryResponse {
   id: string;
+  position: number;
   name: string;
 }
 
@@ -20,10 +21,10 @@ export function useGetAllCategories() {
   });
 
   return {
-    categories: getAllCategoriesQuery.data,
-    isPending: getAllCategoriesQuery.isLoading,
-    isLoaded: getAllCategoriesQuery.isSuccess,
-    isError: getAllCategoriesQuery.isError,
-    error: getAllCategoriesQuery.error,
+    categories: getAllCategoriesQuery?.data,
+    isPending: getAllCategoriesQuery?.isLoading,
+    isLoaded: getAllCategoriesQuery?.isSuccess,
+    isError: getAllCategoriesQuery?.isError,
+    error: getAllCategoriesQuery?.error,
   };
 }

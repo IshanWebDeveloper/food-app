@@ -8,12 +8,13 @@ import {
 import { SignInRequest, useUserSignIn } from "@/hooks/api/auth/useSignIn";
 import { useUserSignOut } from "@/hooks/api/auth/useSignOut";
 import { useAuthStore } from "@/hooks/useAuthStore";
-import { getAuthToken, removeAuthToken, saveAuthToken } from "@/lib/authToken";
+import { removeAuthToken, saveAuthToken } from "@/lib/authToken";
 import { AuthTokenType } from "@/types/common";
 import api, { setUnauthorizedHandler } from "@/lib/axios";
-import { ENDPOINTS } from "@/api/api-endpoints";
-import { useDataPreloader } from "@/hooks/useDataPreloader";
+import { ToastAndroid } from "react-native";
+import { QueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/constants/queryKeys";
+import { fetchAllDishesByCategories } from "@/hooks/api/dishes/useGetDishesByCategories";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,24 +41,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const { signOut, isPending: isSigningOut } = useUserSignOut();
   const { authState, setAuthState, reset, isReady, setIsLoggedIn, isLoggedIn } =
     useAuthStore();
-  const { prefetching } = useDataPreloader([
-    {
-      key: queryKeys.allCategories,
-      fetcher: async () => {
-        const response = await api.get(ENDPOINTS.CATEGORIES.GET_ALL);
-        return response.data;
-      },
-    },
-    {
-      key: queryKeys.allFoods,
-      fetcher: async () => {
-        const response = await api.get(ENDPOINTS.FOODS.GET_ALL);
-        return response.data;
-      },
-    },
-  ]);
 
   const router = useRouter();
+  const query = new QueryClient();
 
   const handleSignIn = async (data: SignInRequest) => {
     try {
@@ -76,9 +62,21 @@ export function AuthProvider({ children }: PropsWithChildren) {
         AuthTokenType.REFRESH_TOKEN,
         response.data.data.refreshToken,
       );
-      router.replace("/(protected)/(tabs)/home");
+      api.defaults.headers.common["Authorization"] =
+        `Bearer ${response.data.data.accessToken}`;
+      ToastAndroid.show("Sign in successful", ToastAndroid.SHORT);
+      query.prefetchQuery({
+        queryKey: [queryKeys.allDishesByCategories],
+        queryFn: fetchAllDishesByCategories,
+      });
+      router.replace("/(protected)/(home)");
     } catch (error) {
-      console.error("Error signing in:", error);
+      console.error("Sign-in error:", error);
+      ToastAndroid.showWithGravity(
+        "Failed to sign in. Please check your credentials and try again.",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
     }
   };
 
@@ -89,9 +87,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
       await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
       reset();
-      router.replace("/welcome");
+      router.replace("/sign-in");
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error(error);
+      ToastAndroid.showWithGravity(
+        "Error signing out. Please try again.",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+      );
       await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
       await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
       setIsLoggedIn(false);
@@ -100,43 +103,21 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   }, [router, signOut, authState.user?.id, reset, setIsLoggedIn]);
 
-  // periodically refresh access token
-  useEffect(() => {
-    const interval = setInterval(
-      async () => {
-        const storedRefreshToken = await getAuthToken(
-          AuthTokenType.REFRESH_TOKEN,
-        );
-        if (!storedRefreshToken) {
-          router.replace("/sign-in");
-        }
-        const response = await api.post(ENDPOINTS.AUTH.REFRESH_TOKEN, {
-          refresh_token: storedRefreshToken,
-        });
-        await saveAuthToken(
-          AuthTokenType.ACCESS_TOKEN,
-          response.data.data.accessToken,
-        );
-        await saveAuthToken(
-          AuthTokenType.REFRESH_TOKEN,
-          response.data.data.refreshToken,
-        );
-      },
-      14 * 60 * 1000,
-    ); // every 14 min
-    return () => clearInterval(interval);
-  }, [router]);
   useEffect(() => {
     setUnauthorizedHandler(async () => {
       // Custom logic: e.g., reset auth state, navigate to login, show alert, etc.
-      await handleSignOut(); // or your logout logic
+      await removeAuthToken(AuthTokenType.ACCESS_TOKEN);
+      await removeAuthToken(AuthTokenType.REFRESH_TOKEN);
+      setIsLoggedIn(false);
+      reset();
+      router.replace("/sign-in");
     });
-  }, [handleSignOut]);
+  }, [reset, router, setIsLoggedIn, isLoggedIn]);
   useEffect(() => {
-    if (isReady && !prefetching) {
+    if (isReady) {
       SplashScreen.hideAsync();
     }
-  }, [isReady, prefetching]);
+  }, [isReady]);
 
   return (
     <AuthContext.Provider

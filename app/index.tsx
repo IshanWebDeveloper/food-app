@@ -1,12 +1,12 @@
-import { useAuthStore } from "@/hooks/useAuthStore";
+import { AuthContext } from "@/context/authContext";
 import { Redirect } from "expo-router";
+import { useContext } from "react";
 
 const Index = () => {
-  // get auth from storage
-  const { isLoggedIn, isReady } = useAuthStore();
+  const { isLoggedIn } = useContext(AuthContext);
 
-  if (isLoggedIn && isReady) {
-    return <Redirect href="/(protected)/(tabs)/home" />;
+  if (isLoggedIn) {
+    return <Redirect href="/(protected)/(home)" />;
   }
 
   return <Redirect href="/welcome" />;
