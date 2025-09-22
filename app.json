@@ -8,7 +8,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/deliveroo-loading.jpg",
       "resizeMode": "contain"
     },
     "ios": {
@@ -19,13 +19,12 @@
       "package": "com.ishan.foodapp",
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#00CCBC"
       },
       "splash": {
-        "image": "./assets/images/splash.png",
-        "resizeMode": "cover",
-        "backgroundColor": "#ffffff"
+        "image": "./assets/images/deliveroo-loading.jpg",
+        "resizeMode": "contain"
       }
     },
     "web": {
